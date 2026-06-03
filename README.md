@@ -1,75 +1,64 @@
-# DRISHTI: Conversational AI & Crime Analytics Platform
+# DRISHTI: Crime Intelligence & Analytics Dashboard (Prototype)
 
-**DRISHTI** is an intelligent, unified crime intelligence and data-linkage platform designed for the **Karnataka State Police (KSP)**. Built on a serverless, relational architecture using **Zoho Catalyst** (Data Store, NoSQL, Stratus, Zia Services, and QuickML), DRISHTI bridges the gap between massive historical databases and real-time investigative operations.
+DRISHTI is a full-stack prototype dashboard built with React (frontend) and Node/Express (backend) to showcase crime intelligence features for the Karnataka State Police (KSP).
 
-## 🚀 Key Features (8 Integrated AI Systems)
-
-DRISHTI combines 8 specialized AI components into a high-performance dashboard:
-
-1. **Conversational RAG Engine (QuickML RAG)**
-   Allows officers to query FIR records using plain natural language (English/Kannada) and receive structured, source-cited responses.
-2. **Optical Character Recognition (Zia OCR)**
-   Converts scanned paper FIR files and handwritten Kannada scripts into digital, indexable text.
-3. **Named Entity Recognition (Zia Text Analytics)**
-   Scans unstructured narratives to automatically tag and resolve names, phone numbers, locations, and vehicle plates.
-4. **Time Series Forecasting (QuickML Time Series)**
-   Analyzes seasonal and localized crime historical trends to forecast crime risk spikes for proactive patrols.
-5. **Real-time Anomaly Detection (QuickML Anomaly)**
-   Continuously monitors FIR rates across jurisdictions to trigger immediate alerts on abnormal overnight surges.
-6. **Identity & Forensic Document AI (Zia Identity Scanner)**
-   Extracts structures from bank passbooks, cheques, and ID cards to flag suspicious money flows (e.g. Hawala networks).
-7. **Modus Operandi Similarity Matching (LLM Embeddings)**
-   Compares crime behavioral characteristics and signatures to link serial offenses across stations.
-8. **Criminal Network Link Analysis (SNA Graph)**
-   Builds a dynamic connection map of co-accused, shared phone lines, vehicles, and cases to flag key coordinators.
+## Developers
+- **Neav Panjwani**
+- **gautam doliya**
+- **Veera Gupta**
+- **Manya Nirvan**
 
 ---
 
-## Project Architecture
+## Project Status & Features
+
+This repository contains a working prototype of the dashboard. The features are mocked on the backend to demonstrate how the final system will function:
+
+1. **Dashboard Overview**: Displays active investigations, overnight anomalies, and trend forecasts.
+2. **Conversational Search**: A vector-search style chatbot interface that references FIR records.
+3. **Kannada OCR & Entity Extractor**: Extracts details from complaint files and highlights names, phone numbers, and locations.
+4. **Financial Document AI**: Parses transaction lists from seized passbooks to highlight suspicious withdrawals.
+5. **Modus Operandi Matcher**: Identifies similar historical cases based on time, location, and entry methods.
+6. **Network Connection Graph**: Visualizes co-accused networks, shared vehicles, and phone numbers in an interactive chart.
+
+---
+
+## Project Structure
 
 ```
 The_Black_Swans/
-├── client/                     # Vite + React (TypeScript) UI Frontend
+├── client/                     # React Frontend
 │   ├── src/
-│   │   ├── services/api.ts     # API Client (Backend routing & fallbacks)
-│   │   ├── App.tsx             # Interactive dashboard & tabs
-│   │   ├── App.css             # Light sage-grey dashboard custom styles
+│   │   ├── services/api.ts     # API calls to backend & mock fallbacks
+│   │   ├── App.tsx             # Main dashboard UI component (tabs, layouts)
+│   │   ├── App.css             # Light sage-grey dashboard styling
 │   │   └── main.tsx
 │   └── package.json
-├── server/                     # Node.js + Express Backend Service
-│   ├── src/
-│   │   ├── routes/ai.ts        # AI module mock/stub endpoints
-│   │   └── index.ts            # Express entrypoint
-│   └── package.json
-└── README.md                   # Project overview & running instructions
+└── server/                     # Express Backend
+    ├── src/
+    │   ├── routes/ai.ts        # Dummy API endpoints for the 6 tabs
+    │   └── index.ts            # Main Express entrypoint
+    └── package.json
 ```
 
 ---
 
-## Getting Started
+## How to Run Locally
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-
-### 1. Start the Backend Express Server
+### 1. Run the Backend Server
+Go to the server directory, install packages, and start the development server:
 ```bash
 cd server
 npm install
 npm run dev
 ```
-The server will run on `http://localhost:5000`.
+The backend server runs on `http://localhost:5000`.
 
-### 2. Start the Frontend React Client
+### 2. Run the Frontend Client
+Go to the client directory, install packages, and start the Vite server:
 ```bash
 cd client
 npm install
 npm run dev
 ```
-Open `http://localhost:5173` (or the port specified by Vite) in your browser to interact with the DRISHTI platform dashboard.
-
----
-
-## Governance & Traceability
-- **Audit Trails**: Every conversational prompt and data export is ledgered to the `audit_event` and `model_reasoning_trace` relational tables in the Catalyst Data Store.
-- **Data Protection**: Masking of fields based on user access levels (Supervisors vs Patrol Officers) to align with India's DPDP Act 2023.
+Open `http://localhost:5173` in your browser to view the dashboard.
