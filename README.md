@@ -2,15 +2,7 @@
 
 **DRISHTI** is an intelligent, unified crime intelligence and data-linkage platform designed for the **Karnataka State Police (KSP)**. Built on a serverless, relational architecture using **Zoho Catalyst** (Data Store, NoSQL, Stratus, Zia Services, and QuickML), DRISHTI bridges the gap between massive historical databases and real-time investigative operations.
 
-## Developers
-- **Neav Panjwani**
-- **gautam doliya**
-- **Veera Gupta**
-- **Manya Nirvan**
-
----
-
-## Key Features (8 Integrated AI Systems)
+## 🚀 Key Features (8 Integrated AI Systems)
 
 DRISHTI combines 8 specialized AI components into a high-performance dashboard:
 
@@ -49,8 +41,6 @@ The_Black_Swans/
 │   │   ├── routes/ai.ts        # AI module mock/stub endpoints
 │   │   └── index.ts            # Express entrypoint
 │   └── package.json
-├── DRISHTI_AI_Components_Guide.pdf  # AI specification details
-├── DataThon Hackathon.docx          # Hackathon brief and catalyst structure
 └── README.md                   # Project overview & running instructions
 ```
 
