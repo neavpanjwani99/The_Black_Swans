@@ -41,8 +41,6 @@ The_Black_Swans/
 │   │   ├── routes/ai.ts        # AI module mock/stub endpoints
 │   │   └── index.ts            # Express entrypoint
 │   └── package.json
-├── DRISHTI_AI_Components_Guide.pdf  # AI specification details
-├── DataThon Hackathon.docx          # Hackathon brief and catalyst structure
 └── README.md                   # Project overview & running instructions
 ```
 
