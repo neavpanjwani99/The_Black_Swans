@@ -1,37 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg-primary: #080c16;
-  --bg-secondary: #0f172a;
-  --bg-tertiary: #1e293b;
-  --card-bg: rgba(15, 23, 42, 0.6);
-  --card-border: rgba(51, 65, 85, 0.5);
-  --card-border-glow: rgba(59, 130, 246, 0.3);
+  --bg-primary: #F6F7F5;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E8EAE6;
+  --card-bg: #FFFFFF;
+  --card-border: #E2E4E0;
+  --card-border-glow: rgba(90, 108, 99, 0.2);
   
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #2F3A34;
+  --text-secondary: #6B736E;
+  --text-muted: #8E9692;
   
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
-  --accent-violet: #8b5cf6;
+  --accent-blue: #5A6C63;
+  --accent-cyan: #8A9A91;
+  --accent-emerald: #3d7e63;
+  --accent-amber: #b87508;
+  --accent-rose: #bf3f4a;
+  --accent-violet: #6b43b5;
   
   --sidebar-width: 260px;
   --header-height: 70px;
   
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-glow: 0 0 15px rgba(59, 130, 246, 0.25);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-glow: 0 0 15px rgba(90, 108, 99, 0.15);
   
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   
-  color-scheme: dark;
+  color-scheme: light;
   color: var(--text-primary);
   background-color: var(--bg-primary);
   
