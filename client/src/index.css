@@ -84,3 +84,49 @@ code, pre {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* Skeleton Loader CSS Utilities */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--card-border) 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-text {
+  height: 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+.skeleton-title {
+  height: 18px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 60%;
+  display: block;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: block;
+}
+
+.skeleton-block {
+  height: 140px;
+  border-radius: 8px;
+  width: 100%;
+  display: block;
+}
