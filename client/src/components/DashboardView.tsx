@@ -114,7 +114,19 @@ export function DashboardView({ user }: DashboardViewProps) {
             </span>
           </div>
           {dashboardLoading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}><div className="spinner"></div></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '10px 0' }}>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div className="skeleton-title skeleton-shimmer" style={{ width: '20%', height: '16px' }} />
+                <div className="skeleton-title skeleton-shimmer" style={{ width: '15%', height: '16px' }} />
+                <div className="skeleton-title skeleton-shimmer" style={{ width: '15%', height: '16px' }} />
+                <div className="skeleton-title skeleton-shimmer" style={{ width: '25%', height: '16px' }} />
+                <div className="skeleton-title skeleton-shimmer" style={{ width: '15%', height: '16px' }} />
+              </div>
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px' }} />
+            </div>
           ) : (
             <div className="data-table-container">
               <table className="data-table">
@@ -212,7 +224,23 @@ export function DashboardView({ user }: DashboardViewProps) {
               <h3 className="card-title">Real-time Anomaly Alerts</h3>
             </div>
             {dashboardLoading ? (
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}><div className="spinner"></div></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderLeft: '4px solid var(--card-border)', paddingLeft: '12px' }}>
+                  <div className="skeleton-title skeleton-shimmer" style={{ width: '70%', height: '14px', marginBottom: '6px' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '90%' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '40%' }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderLeft: '4px solid var(--card-border)', paddingLeft: '12px' }}>
+                  <div className="skeleton-title skeleton-shimmer" style={{ width: '50%', height: '14px', marginBottom: '6px' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '95%' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '45%' }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderLeft: '4px solid var(--card-border)', paddingLeft: '12px' }}>
+                  <div className="skeleton-title skeleton-shimmer" style={{ width: '60%', height: '14px', marginBottom: '6px' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '85%' }} />
+                  <div className="skeleton-text skeleton-shimmer" style={{ height: '10px', width: '35%' }} />
+                </div>
+              </div>
             ) : (
               <div className="anomaly-list">
                 {anomalies.map((a, i) => (
