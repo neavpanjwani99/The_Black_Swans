@@ -143,7 +143,13 @@ export function DocumentView() {
             {docLoading ? <><span className="spinner"></span><span style={{marginLeft: '8px'}}>{docStatusMsg}</span></> : 'Select Image to Process'}
           </button>
 
-          {docResult && (
+          {docLoading ? (
+            <div style={{ background: 'var(--bg-primary)', padding: '14px', borderRadius: '8px', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="skeleton-title skeleton-shimmer" style={{ width: '40%', height: '12px' }} />
+              <div className="skeleton-text skeleton-shimmer" style={{ height: '12px', width: '90%' }} />
+              <div className="skeleton-text skeleton-shimmer" style={{ height: '12px', width: '80%' }} />
+            </div>
+          ) : docResult ? (
             <div style={{ background: 'var(--bg-primary)', padding: '14px', borderRadius: '8px', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <h4 style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Extracted Account</h4>
               <div className="detail-row"><span className="detail-label">Bank</span><span className="detail-value">{docResult.extractedFields.bank}</span></div>
@@ -151,12 +157,19 @@ export function DocumentView() {
               <div className="detail-row"><span className="detail-label">Holder</span><span className="detail-value">{docResult.extractedFields.accountName}</span></div>
               <div className="detail-row"><span className="detail-label">Account No.</span><span className="detail-value">{docResult.extractedFields.accountNumber}</span></div>
             </div>
-          )}
+          ) : null}
         </div>
 
         <div>
           <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Extracted Transaction Ledger & Fraud Flags:</h4>
-          {docResult ? (
+          {docLoading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px', borderRadius: '4px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px', borderRadius: '4px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px', borderRadius: '4px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '35px', borderRadius: '4px' }} />
+            </div>
+          ) : docResult ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="data-table-container">
                 <table className="data-table">

@@ -64,7 +64,13 @@ export function SimilarityView() {
 
         <div>
           <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Linked Case Recommendations (Confidence &gt; 70%):</h4>
-          {similarityMatches.length > 0 ? (
+          {similarityLoading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '70px', borderRadius: '8px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '70px', borderRadius: '8px' }} />
+              <div className="skeleton-block skeleton-shimmer" style={{ height: '70px', borderRadius: '8px' }} />
+            </div>
+          ) : similarityMatches.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {similarityMatches.map((m, idx) => (
                 <div key={idx} className="match-card">
