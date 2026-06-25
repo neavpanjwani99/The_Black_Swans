@@ -375,7 +375,7 @@ function App() {
           {/* TAB 2: CONVERSATIONAL RAG ASSISTANT */}
           {activeTab === 'chat' && (
             <div className="chat-container">
-              {/* Messages Pane */}
+              {/* Messages Panel */}
               <div className="chat-messages-pane">
                 <div className="chat-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

@@ -1,24 +1,82 @@
+import Groq from 'groq-sdk';
 import { Router } from 'express';
+import { ConvertToVector } from '../utils/vector.js';
+import Fir from '../models/Fir.js';
+import { vectorSearch } from '../utils/service.js';
 
 export const aiRouter = Router();
+let groq: Groq;
+const getGroqClient = () => {
+  if (!groq) {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+  return groq;
+};
+
+const generateAnswer = async (query: any, vector_search: any, history: any[] = []) => {
+  const context = vector_search.map((d: any) =>
+    `FIR #${d.fir_number}: ${d.description}`
+  ).join('\n')
+
+  console.log("Context : ", context)
+
+  const formattedHistory = history.map((h: any) => ({
+    role: (h.sender === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+    content: h.text
+  }));
+
+  const chat = await getGroqClient().chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    messages: [
+      {
+        role: 'system' as const, content:
+          'You are DRISHTI, a police analytics assistant. Answer based only on the provided FIR records. Always cite FIR numbers.'
+      },
+      ...formattedHistory,
+      {
+        role: 'user' as const, content:
+          `Query: ${query}\n\nRecords:\n${context}`
+      }
+    ]
+  })
+  return chat.choices[0].message.content
+}
+
 
 // AI #1: RAG / Conversational LLM — Chat-based FIR queries
-aiRouter.post('/chat', (req, res) => {
+aiRouter.post('/chat', async (req, res) => {
   const { message, history } = req.body;
-  
+  console.log(process.env.PORT)
   if (!message) {
     res.status(400).json({ error: 'Message is required' });
     return;
   }
 
-  // Placeholder stub response
-  res.json({
-    response: `This is a mock RAG response from DRISHTI for query: "${message}". In production, this queries the Zoho Catalyst QuickML RAG engine.`,
-    citations: [
-      { id: 'FIR-1023/2024', station: 'Banaswadi PS', type: 'Robbery', date: '2024-01-15' },
-      { id: 'FIR-2341/2023', station: 'Whitefield PS', type: 'Theft', date: '2023-08-22' }
-    ]
-  });
+  try {
+    //Convert to vector form 
+    const vector = await ConvertToVector(message);
+
+    const vector_search = await vectorSearch(vector);
+    console.log("Vector : ", vector_search.map(d => d));
+
+    const answer = await generateAnswer(message, vector_search, history);
+    console.log(answer);
+
+    const citations = vector_search.map((d: any) => ({
+      id: d.fir_number,
+      station: d.ps_name || '',
+      type: d.crime_type || '',
+      date: d.registered_date ? new Date(d.registered_date).toISOString().split('T')[0] : ''
+    }));
+
+    res.json({
+      response: answer,
+      citations: citations
+    });
+  } catch (error: any) {
+    console.error("Error in /chat route: ", error);
+    res.status(500).json({ error: error.message || 'An error occurred during chat processing' });
+  }
 });
 
 // AI #2: OCR — Optical Character Recognition
@@ -145,3 +203,5 @@ aiRouter.post('/export-pdf', (req, res) => {
     generatedAt: new Date().toISOString()
   });
 });
+
+
