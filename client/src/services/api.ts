@@ -132,17 +132,20 @@ export const api = {
     }
   },
 
-  async runOcr(file?: File): Promise<OcrResponse> {
+  async runOcr(text: string, confidence: number): Promise<OcrResponse> {
     try {
-      if (file) console.log('Processing OCR file:', file.name);
-      const res = await fetch(`${API_BASE_URL}/ocr`, { method: 'POST' });
+      const res = await fetch(`${API_BASE_URL}/ocr`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, confidence })
+      });
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
         status: 'success',
         language: 'Kannada + English (mixed)',
-        confidence: 0.942,
+        confidence: confidence || 0.942,
         extractedFields: {
           firNumber: '0234/2019',
           dateFiled: '2019-03-14',
@@ -150,7 +153,7 @@ export const api = {
           crimeType: 'Theft under IPC 379',
           location: 'Near Bus Stand, Gulbarga'
         },
-        rawText: 'FIR No. 0234/2019, Gulbarga Police Station... આરોપી/ಆರೋಪಿ: ರಾಜು ಕುಮಾರ್ (Raju Kumar)...'
+        rawText: text || 'FIR No. 0234/2019, Gulbarga Police Station... आरोपी/ಆರೋಪಿ: ರಾಜು ಕುಮಾರ್ (Raju Kumar)...'
       };
     }
   },

@@ -80,34 +80,161 @@ aiRouter.post('/chat', async (req, res) => {
 });
 
 // AI #2: OCR — Optical Character Recognition
-aiRouter.post('/ocr', (req, res) => {
-  res.json({
-    status: 'success',
-    language: 'Kannada + English (mixed)',
-    confidence: 0.942,
-    extractedFields: {
-      firNumber: '0234/2019',
-      dateFiled: '2019-03-14',
-      accusedName: 'Raju Kumar',
-      crimeType: 'Theft under IPC 379',
-      location: 'Near Bus Stand, Gulbarga'
-    },
-    rawText: 'FIR No. 0234/2019, Gulbarga Police Station... આરોપી/ಆರೋಪಿ: ರಾಜು ಕುಮಾರ್ (Raju Kumar)...'
-  });
+aiRouter.post('/ocr', async (req, res) => {
+  const { text, confidence } = req.body;
+  if (!text) {
+    res.status(400).json({ error: 'Text is required for OCR analysis' });
+    return;
+  }
+
+  try {
+    const groqClient = getGroqClient();
+    const prompt = `You are an AI assistant specialized in analyzing police FIR (First Information Report) documents.
+Analyze the following text extracted via OCR from a police document.
+
+Text:
+"""
+${text}
+"""
+
+Extract the following details in JSON format:
+1. "language": The language of the document (e.g., "Kannada", "English", "Kannada + English (mixed)", etc.)
+2. "confidence": A confidence score (number between 0 and 1) representing the quality/readability of the text. If Tesseract confidence was provided as ${confidence}, take it into account.
+3. "extractedFields": An object containing:
+   - "firNumber": The FIR number/ID (e.g., "0234/2019"). If not found, output null.
+   - "dateFiled": The date of filing (format: YYYY-MM-DD). If not found, output null.
+   - "accusedName": The name of the accused person. If not found, output null.
+   - "crimeType": The crime/IPC section (e.g., "Theft under IPC 379"). If not found, output null.
+   - "location": The location of the incident. If not found, output null.
+
+Return ONLY a valid JSON object. Do not include any markdown formatting, explanation, or backticks.`;
+
+    const chat = await groqClient.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: 'You are a precise data extraction AI. You output only valid JSON.' },
+        { role: 'user', content: prompt }
+      ],
+      response_format: { type: 'json_object' }
+    });
+
+    const resultText = chat.choices[0].message.content || '{}';
+    const result = JSON.parse(resultText);
+
+    res.json({
+      status: 'success',
+      language: result.language || 'English',
+      confidence: result.confidence || confidence || 0.9,
+      extractedFields: {
+        firNumber: result.extractedFields?.firNumber || 'N/A',
+        dateFiled: result.extractedFields?.dateFiled || 'N/A',
+        accusedName: result.extractedFields?.accusedName || 'N/A',
+        crimeType: result.extractedFields?.crimeType || 'N/A',
+        location: result.extractedFields?.location || 'N/A'
+      },
+      rawText: text
+    });
+  } catch (error: any) {
+    console.error("Error in /ocr route: ", error);
+    res.status(500).json({ error: error.message || 'An error occurred during OCR processing' });
+  }
 });
 
 // AI #3: NER — Named Entity Recognition
-aiRouter.post('/ner', (req, res) => {
+aiRouter.post('/ner', async (req, res) => {
   const { text } = req.body;
-  res.json({
-    entities: [
-      { text: 'Raju Kumar', category: 'PERSON', start: 22, end: 32 },
-      { text: 'Shiva', category: 'PERSON', start: 50, end: 55 },
-      { text: 'Koramangala flyover', category: 'LOCATION', start: 69, end: 88 },
-      { text: 'KA-05-MN-4421', category: 'VEHICLE', start: 108, end: 121 },
-      { text: '9876543210', category: 'PHONE', start: 139, end: 149 }
-    ]
-  });
+  if (!text) {
+    res.status(400).json({ error: 'Text is required for entity recognition' });
+    return;
+  }
+
+  try {
+    const groqClient = getGroqClient();
+    const prompt = `You are an AI assistant specialized in Named Entity Recognition (NER) for police reports.
+Analyze the following text and extract entities.
+
+Text:
+"""
+${text}
+"""
+
+Extract entities that belong to the following categories:
+- PERSON: Names of suspects, accused, victims, or officers (e.g., "Raju Kumar", "Shiva")
+- LOCATION: Names of places, roads, areas, landmark, stations (e.g., "Koramangala flyover", "Near Bus Stand, Gulbarga")
+- VEHICLE: Vehicle registration numbers, license plates, or specific vehicle models mentioned with numbers (e.g., "KA-05-MN-4421")
+- PHONE: Phone numbers, mobile numbers (e.g., "9876543210")
+- DATE: Dates (e.g., "14th January", "2019-03-14")
+
+Return a JSON object containing a single key "entities", which is an array of objects. Each object must have:
+- "text": The exact text of the entity as it appears in the input text.
+- "category": One of "PERSON", "LOCATION", "VEHICLE", "PHONE", "DATE".
+
+Return ONLY a valid JSON object. Do not include any markdown formatting, explanation, or backticks.`;
+
+    const chat = await groqClient.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: 'You are a precise NER extraction AI. You output only valid JSON.' },
+        { role: 'user', content: prompt }
+      ],
+      response_format: { type: 'json_object' }
+    });
+
+    const resultText = chat.choices[0].message.content || '{"entities": []}';
+    const result = JSON.parse(resultText);
+    const rawEntities = result.entities || [];
+
+    // Map entities and compute their start/end indices programmatically to ensure correctness
+    const matched = new Array(text.length).fill(false);
+    const entitiesWithIndices: any[] = [];
+
+    // Sort by length descending to match longer entities first (e.g., "Raju Kumar" before "Raju")
+    const sortedEntities = [...rawEntities].sort((a: any, b: any) => b.text.length - a.text.length);
+
+    for (const entity of sortedEntities) {
+      if (!entity.text || !entity.category) continue;
+      let pos = 0;
+      while (true) {
+        pos = text.toLowerCase().indexOf(entity.text.toLowerCase(), pos);
+        if (pos === -1) break;
+
+        const start = pos;
+        const end = pos + entity.text.length;
+
+        // Check if there is an overlap
+        let overlap = false;
+        for (let i = start; i < end; i++) {
+          if (matched[i]) {
+            overlap = true;
+            break;
+          }
+        }
+
+        if (!overlap) {
+          for (let i = start; i < end; i++) {
+            matched[i] = true;
+          }
+          entitiesWithIndices.push({
+            text: text.substring(start, end),
+            category: entity.category.toUpperCase(),
+            start,
+            end
+          });
+        }
+        pos = end;
+      }
+    }
+
+    // Sort by start index
+    entitiesWithIndices.sort((a, b) => a.start - b.start);
+
+    res.json({
+      entities: entitiesWithIndices
+    });
+  } catch (error: any) {
+    console.error("Error in /ner route: ", error);
+    res.status(500).json({ error: error.message || 'An error occurred during NER' });
+  }
 });
 
 // AI #4: Time Series Forecasting — Predict crime spikes
