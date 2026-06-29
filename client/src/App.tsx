@@ -458,8 +458,7 @@ function App() {
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Process handwritten scans or scanned PDFs for digital transcription.</p>
 
                 <div className="dropzone" onClick={handleOcrTrigger}>
-                  <p style={{ fontWeight: 500 }}>Upload scanned FIR</p>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Drag files here or click to upload</p>
+                 <input type="file" accept="image/*" />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

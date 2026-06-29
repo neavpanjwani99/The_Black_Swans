@@ -1,10 +1,10 @@
 import Groq from 'groq-sdk';
 import { Router } from 'express';
 import { ConvertToVector } from '../utils/vector.js';
-import Fir from '../models/Fir.js';
 import { vectorSearch } from '../utils/service.js';
 
 export const aiRouter = Router();
+
 let groq: Groq;
 const getGroqClient = () => {
   if (!groq) {
