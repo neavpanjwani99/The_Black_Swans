@@ -1,23 +1,105 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Tesseract from 'tesseract.js';
 import { api } from '../services/api';
 import type { DocumentResponse } from '../services/api';
+
+// Helper to render PDF pages to canvases using PDF.js loaded from CDN
+async function renderPdfToCanvas(file: File): Promise<HTMLCanvasElement[]> {
+  if (!(window as any).pdfjsLib) {
+    await new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => {
+        (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        resolve();
+      };
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  const pdfjsLib = (window as any).pdfjsLib;
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const canvases: HTMLCanvasElement[] = [];
+
+  // Limit to first 3 pages for performance
+  const numPages = Math.min(pdf.numPages, 3);
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    if (context) {
+      await page.render({ canvasContext: context, viewport }).promise;
+      canvases.push(canvas);
+    }
+  }
+  return canvases;
+}
 
 export function DocumentView() {
   const [docResult, setDocResult] = useState<DocumentResponse | null>(null);
   const [docLoading, setDocLoading] = useState(false);
+  const [docStatusMsg, setDocStatusMsg] = useState('');
+  const [docFileName, setDocFileName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Document scan
-  const handleDocScan = async () => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setDocLoading(true);
+    setDocResult(null);
+    setDocFileName(file.name);
+    setDocStatusMsg('Extracting text with Tesseract...');
+
     try {
-      const res = await api.scanDocument();
-      setTimeout(() => {
-        setDocResult(res);
-        setDocLoading(false);
-      }, 900);
+      let extractedText = '';
+
+      if (file.type === 'application/pdf') {
+        setDocStatusMsg('Rendering PDF pages...');
+        const canvases = await renderPdfToCanvas(file);
+        const allText: string[] = [];
+
+        for (let i = 0; i < canvases.length; i++) {
+          setDocStatusMsg(`OCR on page ${i + 1} of ${canvases.length}...`);
+          const result = await Tesseract.recognize(canvases[i], 'eng+kan', {
+            logger: (m: any) => {
+              if (m.status === 'recognizing text') {
+                const pageProgress = ((i / canvases.length) + (m.progress / canvases.length)) * 100;
+                setDocStatusMsg(`Extracting text... ${Math.round(pageProgress)}%`);
+              }
+            }
+          });
+          allText.push(result.data.text);
+        }
+        extractedText = allText.join('\n\n--- Page Break ---\n\n');
+      } else {
+        setDocStatusMsg('Recognizing text from image...');
+        const result = await Tesseract.recognize(file, 'eng+kan', {
+          logger: (m: any) => {
+            if (m.status === 'recognizing text') {
+              setDocStatusMsg(`Extracting text... ${Math.round(m.progress * 100)}%`);
+            }
+          }
+        });
+        extractedText = result.data.text;
+      }
+      
+      setDocStatusMsg('Analyzing financial data with AI...');
+      
+      const res = await api.scanDocument(extractedText);
+      setDocResult(res);
     } catch (err) {
       console.error(err);
+    } finally {
       setDocLoading(false);
+      setDocStatusMsg('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -33,11 +115,30 @@ export function DocumentView() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div className="dropzone" style={{ padding: '30px 10px' }} onClick={handleDocScan}>
-            <span style={{ fontSize: '13px', fontWeight: 600 }}>Upload Seized Passbook</span>
+          <div 
+            className="dropzone" 
+            style={{ padding: '30px 10px', cursor: docLoading ? 'not-allowed' : 'pointer', opacity: docLoading ? 0.7 : 1 }} 
+            onClick={() => !docLoading && fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,application/pdf"
+              style={{ display: 'none' }}
+              onChange={handleFileSelect}
+              disabled={docLoading}
+            />
+            <span style={{ fontSize: '32px', marginBottom: '8px' }}>📄</span>
+            <span style={{ fontSize: '13px', fontWeight: 600 }}>
+              {docFileName ? docFileName : 'Upload Seized Passbook / Cheque (PDF/Image)'}
+            </span>
           </div>
-          <button className="btn btn-primary" onClick={handleDocScan} disabled={docLoading}>
-            {docLoading ? <span className="spinner"></span> : 'Process Financial Record'}
+          <button 
+            className="btn btn-primary" 
+            onClick={() => !docLoading && fileInputRef.current?.click()} 
+            disabled={docLoading}
+          >
+            {docLoading ? <><span className="spinner"></span><span style={{marginLeft: '8px'}}>{docStatusMsg}</span></> : 'Select Image to Process'}
           </button>
 
           {docResult && (

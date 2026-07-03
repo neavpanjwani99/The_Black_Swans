@@ -8,37 +8,63 @@ export function GraphView() {
   const [graphLoading, setGraphLoading] = useState(true);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Load Graph Data
   useEffect(() => {
-    async function loadGraph() {
-      setGraphLoading(true);
-      try {
-        const data = await api.getGraph();
-        setGraphNodes(data.nodes);
-        setGraphLinks(data.links);
-      } catch (error) {
-        console.error('Failed to load graph', error);
-      } finally {
-        setGraphLoading(false);
-      }
-    }
     loadGraph();
   }, []);
+
+  const loadGraph = async (query?: string) => {
+    setGraphLoading(true);
+    setSelectedNode(null);
+    try {
+      const data = await api.getGraph(query);
+      setGraphNodes(data.nodes);
+      setGraphLinks(data.links);
+    } catch (error) {
+      console.error('Failed to load graph', error);
+    } finally {
+      setGraphLoading(false);
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    loadGraph(searchQuery);
+  };
 
   return (
     <div className="ocr-split">
       {/* Left pane: SVG Graph Canvas */}
       <div className="graph-pane" style={{ height: '100%' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Criminal Co-offending Network Map</h3>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-          Network visualization of co-accused contacts, vehicle logs, and case records. Analyzed {graphLinks.length} connections. Click a node to view details.
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Criminal Co-offending Network Map</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+              Network visualization of co-accused contacts, vehicle logs, and case records. Analyzed {graphLinks.length} connections.
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          <input
+            type="text"
+            className="textarea-input"
+            style={{ minHeight: '40px', height: '40px' }}
+            placeholder="Officer Input: Enter suspect name, vehicle number, or phone..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" className="btn btn-primary" disabled={graphLoading} style={{ padding: '0 20px', whiteSpace: 'nowrap' }}>
+            {graphLoading ? <span className="spinner"></span> : 'Analyze Network'}
+          </button>
+        </form>
 
         {graphLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}><div className="spinner"></div></div>
         ) : (
           <div className="graph-canvas">
-            {/* Simple Mock Interactive SVG Graph */}
             <svg width="100%" height="100%" viewBox="0 0 600 400" style={{ cursor: 'grab' }}>
               <defs>
                 <marker id="arrow" viewBox="0 0 10 10" refX="20" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -46,37 +72,57 @@ export function GraphView() {
                 </marker>
               </defs>
 
-              {/* Links */}
-              <line x1="300" y1="200" x2="150" y2="120" stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
-              <line x1="300" y1="200" x2="300" y2="80" stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
-              <line x1="300" y1="200" x2="450" y2="150" stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
-              <line x1="150" y1="120" x2="100" y2="280" stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
-              <line x1="300" y1="80" x2="500" y2="280" stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
+              {/* Dynamic Links */}
+              {graphLinks.map((link, idx) => {
+                const sourceIdx = graphNodes.findIndex(n => n.id === link.source);
+                const targetIdx = graphNodes.findIndex(n => n.id === link.target);
+                
+                if (sourceIdx === -1 || targetIdx === -1) return null;
 
-              {/* Nodes */}
-              {/* Shiva */}
-              <circle cx="300" cy="200" r="16" fill="var(--accent-blue)" stroke="#ffffff" strokeWidth="2" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === 'Shiva') || null)} />
-              <text x="300" y="230" fill="var(--text-primary)" fontSize="11" textAnchor="middle" fontWeight="bold">Shiva (Accused)</text>
+                const sAngle = (sourceIdx / graphNodes.length) * 2 * Math.PI;
+                const tAngle = (targetIdx / graphNodes.length) * 2 * Math.PI;
+                const sx = 300 + 130 * Math.cos(sAngle);
+                const sy = 200 + 130 * Math.sin(sAngle);
+                const tx = 300 + 130 * Math.cos(tAngle);
+                const ty = 200 + 130 * Math.sin(tAngle);
 
-              {/* Ramesh */}
-              <circle cx="150" cy="120" r="14" fill="var(--accent-blue)" stroke="#ffffff" strokeWidth="1" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === 'Ramesh Kumar') || null)} />
-              <text x="150" y="100" fill="var(--text-secondary)" fontSize="11" textAnchor="middle">Ramesh</text>
+                return (
+                  <g key={idx}>
+                    <line x1={sx} y1={sy} x2={tx} y2={ty} stroke="rgba(0,0,0,0.15)" strokeWidth="2" />
+                    <text x={(sx + tx) / 2} y={(sy + ty) / 2 - 5} fill="var(--text-muted)" fontSize="9" textAnchor="middle">
+                      {link.type}
+                    </text>
+                  </g>
+                );
+              })}
 
-              {/* Ali Baig */}
-              <circle cx="300" cy="80" r="16" fill="var(--accent-rose)" stroke="#ffffff" strokeWidth="2" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === 'Ali Baig') || null)} />
-              <text x="300" y="60" fill="var(--accent-rose)" fontSize="11" textAnchor="middle" fontWeight="bold">Ali Baig (Broker)</text>
+              {/* Dynamic Nodes */}
+              {graphNodes.map((node, i) => {
+                const angle = (i / graphNodes.length) * 2 * Math.PI;
+                const x = 300 + 130 * Math.cos(angle);
+                const y = 200 + 130 * Math.sin(angle);
+                
+                let fill = 'var(--accent-blue)';
+                if (node.type === 'PHONE') fill = 'var(--accent-amber)';
+                if (node.type === 'VEHICLE') fill = 'var(--accent-violet)';
+                if (node.type === 'CASE') fill = 'var(--accent-rose)';
 
-              {/* Phone */}
-              <circle cx="450" cy="150" r="12" fill="var(--accent-amber)" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === '9876543210') || null)} />
-              <text x="450" y="175" fill="var(--text-secondary)" fontSize="10" textAnchor="middle">9876543210</text>
+                const isSelected = selectedNode?.id === node.id;
 
-              {/* Vehicle */}
-              <circle cx="100" cy="280" r="12" fill="var(--accent-violet)" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === 'KA-05-MN-4421') || null)} />
-              <text x="100" y="305" fill="var(--text-secondary)" fontSize="10" textAnchor="middle">KA-05-MN-4421</text>
-
-              {/* Case */}
-              <circle cx="500" cy="280" r="12" fill="var(--accent-rose)" style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(graphNodes.find(n => n.id === 'FIR-4521') || null)} />
-              <text x="500" y="305" fill="var(--text-secondary)" fontSize="10" textAnchor="middle">FIR #4521</text>
+                return (
+                  <g key={node.id} style={{ cursor: 'pointer' }} onClick={() => setSelectedNode(node)}>
+                    <circle 
+                      cx={x} cy={y} r={isSelected ? 18 : 14} 
+                      fill={fill} 
+                      stroke={isSelected ? 'var(--text-primary)' : '#ffffff'} 
+                      strokeWidth="2" 
+                    />
+                    <text x={x} y={y + (isSelected ? 30 : 25)} fill="var(--text-primary)" fontSize={isSelected ? "11" : "10"} textAnchor="middle" fontWeight={isSelected ? "bold" : "normal"}>
+                      {node.label}
+                    </text>
+                  </g>
+                );
+              })}
             </svg>
           </div>
         )}

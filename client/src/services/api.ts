@@ -7,14 +7,21 @@ export interface ChatResponse {
 
 export interface OcrResponse {
   status: string;
+  message?: string;
   language: string;
   confidence: number;
   extractedFields: {
-    firNumber: string;
-    dateFiled: string;
-    accusedName: string;
-    crimeType: string;
-    location: string;
+    fir_number: string | null;
+    ps_name: string | null;
+    district: string | null;
+    incident_date: string | null;
+    registered_date: string | null;
+    crime_type: string | null;
+    ipc_sections: string[];
+    description: string;
+    accused: Array<{ name: string; age: number; gender: string; address: string }>;
+    victim: Array<{ name: string; age: number; gender: string }>;
+    location: string | null;
   };
   rawText: string;
 }
@@ -144,13 +151,20 @@ export const api = {
       console.warn('API call failed, returning mock data', e);
       return {
         status: 'success',
+        message: 'OCR Extraction Complete (Fallback)',
         language: 'Kannada + English (mixed)',
         confidence: confidence || 0.942,
         extractedFields: {
-          firNumber: '0234/2019',
-          dateFiled: '2019-03-14',
-          accusedName: 'Raju Kumar',
-          crimeType: 'Theft under IPC 379',
+          fir_number: '0234/2019',
+          ps_name: 'Gulbarga Police Station',
+          district: 'Gulbarga',
+          incident_date: '2019-03-14',
+          registered_date: '2019-03-14',
+          crime_type: 'Theft',
+          ipc_sections: ['379'],
+          description: 'A theft incident occurred near the bus stand.',
+          accused: [{ name: 'Raju Kumar', age: 30, gender: 'Male', address: 'Unknown' }],
+          victim: [],
           location: 'Near Bus Stand, Gulbarga'
         },
         rawText: text || 'FIR No. 0234/2019, Gulbarga Police Station... आरोपी/ಆರೋಪಿ: ರಾಜು ಕುಮಾರ್ (Raju Kumar)...'
@@ -219,15 +233,18 @@ export const api = {
     }
   },
 
-  async scanDocument(file?: File): Promise<DocumentResponse> {
+  async scanDocument(text: string): Promise<DocumentResponse> {
     try {
-      if (file) console.log('Scanning document file:', file.name);
-      const res = await fetch(`${API_BASE_URL}/document`, { method: 'POST' });
+      const res = await fetch(`${API_BASE_URL}/document`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
-        documentType: 'Bank Passbook',
+        documentType: 'Bank Passbook (Fallback)',
         extractedFields: {
           bank: 'Canara Bank',
           branch: 'Rajajinagar Branch',
@@ -236,9 +253,11 @@ export const api = {
           ifsc: 'CNRB0001234'
         },
         flaggedTransactions: [
-          { date: '2024-01-14', type: 'CREDIT', amount: 85000, sender: 'Unidentified' }
+          { date: '2024-01-14', type: 'CREDIT', amount: 85000, sender: 'Unidentified' },
+          { date: '2024-02-03', type: 'CREDIT', amount: 120000, sender: 'Unidentified' },
+          { date: '2024-02-05', type: 'DEBIT', amount: 205000, sender: 'Cash Withdrawal' }
         ],
-        riskPatternFlag: 'Large cash withdrawal within 48 hours of credit.'
+        riskPatternFlag: 'Large cash withdrawal within 48 hours of credit. Possible hawala pattern.'
       };
     }
   },
@@ -261,9 +280,10 @@ export const api = {
     }
   },
 
-  async getGraph(): Promise<GraphResponse> {
+  async getGraph(query?: string): Promise<GraphResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/graph`);
+      const url = query ? `${API_BASE_URL}/graph?q=${encodeURIComponent(query)}` : `${API_BASE_URL}/graph`;
+      const res = await fetch(url);
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);

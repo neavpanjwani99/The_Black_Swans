@@ -141,7 +141,7 @@ export function OcrView() {
 
         for (let i = 0; i < canvases.length; i++) {
           setOcrStatusMsg(`OCR on page ${i + 1} of ${canvases.length}...`);
-          const result = await Tesseract.recognize(canvases[i], 'eng', {
+          const result = await Tesseract.recognize(canvases[i], 'eng+kan', {
             logger: (m: any) => {
               if (m.status === 'recognizing text') {
                 const pageProgress = ((i / canvases.length) + (m.progress / canvases.length)) * 100;
@@ -156,8 +156,8 @@ export function OcrView() {
         tesseractConfidence = canvases.length > 0 ? totalConf / canvases.length / 100 : 0.9;
       } else {
         // Image: OCR directly
-        setOcrStatusMsg('Recognizing text from image...');
-        const result = await Tesseract.recognize(file, 'eng', {
+        setOcrStatusMsg('Recognizing text from image (English + Kannada)...');
+        const result = await Tesseract.recognize(file, 'eng+kan', {
           logger: (m: any) => {
             if (m.status === 'recognizing text') {
               setOcrProgress(Math.round(m.progress * 100));
@@ -311,11 +311,22 @@ export function OcrView() {
             <div>
               <h4 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '10px', color: 'var(--text-secondary)' }}>Relational Schema Extraction:</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-                <div className="detail-row"><span className="detail-label">FIR Number</span><span className="detail-value" style={{ fontWeight: 700 }}>{ocrResult.extractedFields.firNumber}</span></div>
-                <div className="detail-row"><span className="detail-label">Filing Date</span><span className="detail-value">{ocrResult.extractedFields.dateFiled}</span></div>
-                <div className="detail-row"><span className="detail-label">Accused Name</span><span className="detail-value" style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>{ocrResult.extractedFields.accusedName}</span></div>
-                <div className="detail-row"><span className="detail-label">Crime IPC Section</span><span className="detail-value" style={{ fontWeight: 600 }}>{ocrResult.extractedFields.crimeType}</span></div>
-                <div className="detail-row" style={{ borderBottom: 'none', paddingBottom: 0 }}><span className="detail-label">Incident Location</span><span className="detail-value" style={{ fontWeight: 600 }}>{ocrResult.extractedFields.location}</span></div>
+                <div className="detail-row"><span className="detail-label">FIR Number</span><span className="detail-value" style={{ fontWeight: 700 }}>{ocrResult.extractedFields.fir_number || 'N/A'}</span></div>
+                <div className="detail-row"><span className="detail-label">Police Station</span><span className="detail-value">{ocrResult.extractedFields.ps_name || 'N/A'} {ocrResult.extractedFields.district ? `(${ocrResult.extractedFields.district})` : ''}</span></div>
+                <div className="detail-row"><span className="detail-label">Filing Date</span><span className="detail-value">{ocrResult.extractedFields.registered_date || 'N/A'}</span></div>
+                <div className="detail-row"><span className="detail-label">Incident Date</span><span className="detail-value">{ocrResult.extractedFields.incident_date || 'N/A'}</span></div>
+                <div className="detail-row"><span className="detail-label">Crime Type</span><span className="detail-value" style={{ fontWeight: 600 }}>{ocrResult.extractedFields.crime_type || 'N/A'}</span></div>
+                <div className="detail-row"><span className="detail-label">IPC Sections</span><span className="detail-value">{ocrResult.extractedFields.ipc_sections?.join(', ') || 'N/A'}</span></div>
+                <div className="detail-row">
+                  <span className="detail-label">Accused</span>
+                  <span className="detail-value" style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>
+                    {ocrResult.extractedFields.accused?.length > 0
+                      ? ocrResult.extractedFields.accused.map(a => a.name).join(', ')
+                      : 'N/A'}
+                  </span>
+                </div>
+                <div className="detail-row"><span className="detail-label">Victim</span><span className="detail-value">{ocrResult.extractedFields.victim?.length > 0 ? ocrResult.extractedFields.victim.map(v => v.name).join(', ') : 'N/A'}</span></div>
+                <div className="detail-row" style={{ borderBottom: 'none', paddingBottom: 0 }}><span className="detail-label">Incident Location</span><span className="detail-value" style={{ fontWeight: 600 }}>{ocrResult.extractedFields.location || 'N/A'}</span></div>
               </div>
             </div>
 
