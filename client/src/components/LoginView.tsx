@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import '../assets/css/LoginView.css';
 
 interface LoginViewProps {
   onLogin: (user: { name: string; badgeNumber: string; role: string; station: string }) => void;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import './App.css';
+import './assets/css/App.css';
 import { DashboardView } from './components/DashboardView';
 import { ChatView } from './components/ChatView';
 import { OcrView } from './components/OcrView';

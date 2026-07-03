@@ -1,0 +1,42 @@
+/* Document AI / Identity Scanner Styling */
+.doc-split {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 24px;
+}
+
+.doc-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 8px;
+  font-size: 14px;
+}
+
+.detail-label {
+  color: var(--text-secondary);
+}
+
+.detail-value {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.risk-banner {
+  background: rgba(191, 63, 74, 0.08);
+  border: 1px solid rgba(191, 63, 74, 0.25);
+  color: var(--accent-rose);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}

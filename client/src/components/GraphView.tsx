@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import type { GraphNode, GraphLink } from '../services/api';
+import '../assets/css/GraphView.css';
 
 export function GraphView() {
   const [graphNodes, setGraphNodes] = useState<GraphNode[]>([]);

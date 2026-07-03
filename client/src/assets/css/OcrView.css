@@ -1,0 +1,112 @@
+/* OCR & NER Styling */
+.ocr-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  height: calc(100vh - var(--header-height) - 96px);
+}
+
+.ocr-pane {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.dropzone {
+  border: 2px dashed var(--card-border);
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: rgba(90, 108, 99, 0.02);
+}
+
+.dropzone:hover {
+  border-color: var(--accent-blue);
+  background: rgba(90, 108, 99, 0.05);
+}
+
+.dropzone-icon {
+  font-size: 32px;
+  color: var(--text-secondary);
+}
+
+.textarea-input {
+  width: 100%;
+  height: 180px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+}
+
+.textarea-input:focus {
+  border-color: var(--accent-blue);
+}
+
+.ocr-text-view {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Entities parsing highlighting */
+.entity-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px;
+}
+
+.entity-person {
+  background: rgba(90, 108, 99, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(90, 108, 99, 0.25);
+}
+
+.entity-location {
+  background: rgba(61, 126, 99, 0.1);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(61, 126, 99, 0.25);
+}
+
+.entity-vehicle {
+  background: rgba(107, 67, 181, 0.1);
+  color: var(--accent-violet);
+  border: 1px solid rgba(107, 67, 181, 0.25);
+}
+
+.entity-phone {
+  background: rgba(184, 117, 8, 0.1);
+  color: var(--accent-amber);
+  border: 1px solid rgba(184, 117, 8, 0.25);
+}
+
+.entity-date {
+  background: rgba(184, 117, 8, 0.1);
+  color: var(--accent-amber);
+  border: 1px solid rgba(184, 117, 8, 0.25);
+}

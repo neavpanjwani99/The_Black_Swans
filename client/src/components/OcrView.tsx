@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import Tesseract from 'tesseract.js';
 import { api } from '../services/api';
 import type { OcrResponse, NerResponse, Entity } from '../services/api';
+import '../assets/css/OcrView.css';
 
 // Helper to render PDF pages to canvases using PDF.js loaded from CDN
 async function renderPdfToCanvas(file: File): Promise<HTMLCanvasElement[]> {

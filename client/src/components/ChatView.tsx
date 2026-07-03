@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../services/api';
+import '../assets/css/ChatView.css';
 
 interface ChatMessage {
   sender: 'user' | 'ai';

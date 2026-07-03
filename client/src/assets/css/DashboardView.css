@@ -1,0 +1,195 @@
+/* Dashboard Grid */
+.dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.metric-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--card-border-glow);
+  box-shadow: var(--shadow-glow);
+}
+
+.metric-info h3 {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.metric-delta {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.delta-up { color: var(--accent-emerald); }
+.delta-down { color: var(--accent-rose); }
+
+.metric-icon-container {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.dashboard-split-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.dashboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Anomaly Ticker */
+.anomaly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.anomaly-alert-item {
+  background: rgba(191, 63, 74, 0.03);
+  border: 1px solid rgba(191, 63, 74, 0.12);
+  border-left: 4px solid var(--accent-rose);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.anomaly-alert-item:hover {
+  background: rgba(191, 63, 74, 0.05);
+  box-shadow: 0 2px 8px rgba(191, 63, 74, 0.05);
+}
+
+.anomaly-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.anomaly-title {
+  font-weight: 600;
+  color: var(--accent-rose);
+  font-size: 14px;
+}
+
+.anomaly-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.anomaly-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.anomaly-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.anomaly-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(191, 63, 74, 0.2);
+  background: rgba(191, 63, 74, 0.05);
+  color: var(--accent-rose);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.anomaly-btn:hover {
+  background: rgba(191, 63, 74, 0.1);
+}
+
+/* Forecast Table */
+.data-table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.data-table th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}

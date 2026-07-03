@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { api } from '../services/api';
 import type { SimilarityMatch } from '../services/api';
+import '../assets/css/SimilarityView.css';
 
 export function SimilarityView() {
   const [similarityInput, setSimilarityInput] = useState('FIR-5701  house break-in, Indiranagar');

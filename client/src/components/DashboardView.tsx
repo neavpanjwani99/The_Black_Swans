@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import type { ForecastItem, AnomalyAlert } from '../services/api';
+import '../assets/css/DashboardView.css';
 
 export function DashboardView() {
   const [anomalies, setAnomalies] = useState<AnomalyAlert[]>([]);

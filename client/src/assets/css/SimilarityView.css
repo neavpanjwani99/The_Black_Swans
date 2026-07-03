@@ -1,0 +1,59 @@
+/* Similarity Matching */
+.similarity-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.slider-container label {
+  color: var(--text-secondary);
+}
+
+.slider-control {
+  width: 100%;
+  accent-color: var(--accent-blue);
+}
+
+.match-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match-percentage {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-emerald);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.factor-tag {
+  font-size: 11px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: var(--text-secondary);
+}
