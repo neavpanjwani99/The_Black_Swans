@@ -43,7 +43,6 @@ export function LoginView({ onLogin }: LoginViewProps) {
         {/* Left Side: Brand Panel */}
         <div className="login-brand-side">
           <img src="/Main-logo.png" alt="DRISHTI Logo" className="login-logo" />
-          <h1 className="login-title">DRISHTI</h1>
           <p className="login-subtitle">Karnataka State Police &mdash; Crime Analytics Portal</p>
           <div className="login-badge">Secure Intel Channel &bull; Level 3 Access</div>
           
