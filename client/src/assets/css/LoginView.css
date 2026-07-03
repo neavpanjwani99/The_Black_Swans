@@ -50,15 +50,15 @@
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 20px;
-  padding: 48px 36px;
+  padding: 0;
   width: 100%;
-  max-width: 440px;
+  max-width: 840px;
+  min-height: 540px;
   box-shadow: 0 10px 30px rgba(90, 108, 99, 0.06);
-  text-align: center;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   z-index: 2;
+  overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -68,9 +68,23 @@
   box-shadow: 0 15px 40px rgba(90, 108, 99, 0.1);
 }
 
+/* Brand column styles */
+.login-brand-side {
+  width: 42%;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(90, 108, 99, 0.08) 100%);
+  border-right: 1px solid var(--card-border);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .login-logo {
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   margin-bottom: 20px;
 }
@@ -86,7 +100,8 @@
 .login-subtitle {
   font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 24px;
+  line-height: 1.4;
+  margin-bottom: 20px;
 }
 
 /* Security Badge Pill - Blue Badge Theme */
@@ -115,11 +130,47 @@
   box-shadow: 0 0 8px var(--accent-emerald);
 }
 
+.login-brand-meta {
+  margin-top: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.login-brand-meta p:first-child {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Form column styles */
+.login-form-side {
+  width: 58%;
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.login-form-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.login-form-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
 .login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .form-group {
@@ -139,7 +190,7 @@
 
 .form-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 11px 14px;
   border-radius: 8px;
   border: 1px solid var(--card-border);
   background-color: var(--bg-secondary);
@@ -147,6 +198,7 @@
   font-size: 14px;
   outline: none;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .form-input::placeholder {
@@ -161,16 +213,16 @@
 
 .login-btn {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
   color: #ffffff;
   border: none;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 10px;
+  margin-top: 8px;
   box-shadow: 0 4px 12px rgba(90, 108, 99, 0.15);
 }
 
@@ -195,35 +247,61 @@
   background: rgba(191, 63, 74, 0.05);
   border: 1px solid rgba(191, 63, 74, 0.2);
   color: var(--accent-rose);
-  padding: 12px 16px;
+  padding: 12px 14px;
   border-radius: 8px;
   font-size: 12px;
   width: 100%;
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   line-height: 1.4;
+  box-sizing: border-box;
 }
 
-.login-footer {
-  margin-top: 32px;
+/* Demo Credentials Box */
+.demo-credentials-box {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
   font-size: 11px;
-  color: var(--text-muted);
-  line-height: 1.5;
+  text-align: left;
 }
 
-.login-footer p:first-child {
-  font-weight: 500;
+.demo-credentials-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.demo-credentials-list {
+  padding-left: 16px;
+  list-style-type: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   color: var(--text-secondary);
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .login-card {
-    padding: 36px 24px;
-    border-radius: 16px;
+    flex-direction: column;
+    max-width: 440px;
+    min-height: auto;
   }
   
-  .login-title {
-    font-size: 22px;
+  .login-brand-side {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+    padding: 32px 24px;
+  }
+  
+  .login-form-side {
+    width: 100%;
+    padding: 32px 24px;
+  }
+
+  .login-brand-meta {
+    margin-top: 20px;
   }
 }

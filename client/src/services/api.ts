@@ -330,20 +330,28 @@ export const api = {
       */
 
       // Dynamic Mock logic simulating backend authentication check:
-      if (badgeNumber.trim() === 'KSP-7482' && accessPin === 'password') {
+      const credentials: Record<string, { name: string; role: string; station: string }> = {
+        'KSP-7482': { name: 'Inspector Verma', role: 'Investigator', station: 'Banaswadi PS' },
+        'KSP-9921': { name: 'Analyst Priya', role: 'Analyst', station: 'HQ Crime Intelligence Section' },
+        'KSP-1042': { name: 'ACP Gowda', role: 'Supervisor', station: 'East Division Bengaluru' },
+        'KSP-2030': { name: 'SCRB Director Rao', role: 'Policymaker', station: 'State Crime Records Bureau' }
+      };
+
+      const matchedUser = credentials[badgeNumber.trim()];
+      if (matchedUser && accessPin === 'password') {
         return {
           success: true,
           user: {
-            name: 'Inspector Verma',
-            badgeNumber: 'KSP-7482',
-            role: 'Crime Intelligence Officer',
-            station: 'Banaswadi PS'
+            name: matchedUser.name,
+            badgeNumber: badgeNumber.trim(),
+            role: matchedUser.role,
+            station: matchedUser.station
           }
         };
       }
       return {
         success: false,
-        message: 'Invalid Badge Number or Access PIN. Use KSP-7482 & password.'
+        message: 'Invalid Badge Number or Access PIN. Use KSP-7482, KSP-9921, KSP-1042, or KSP-2030 with password.'
       };
     } catch (e) {
       console.warn('Authentication API call failed, returning fallback mock data', e);

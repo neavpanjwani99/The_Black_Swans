@@ -17,6 +17,15 @@ interface UserSession {
   station: string;
 }
 
+
+// rbac model for user permissions  
+const rolePermissions: Record<string, string[]> = {
+  Investigator: ['dashboard', 'chat', 'ocr', 'document', 'similarity', 'graph'],
+  Analyst: ['dashboard', 'ocr', 'document', 'similarity', 'graph'],
+  Supervisor: ['dashboard', 'chat', 'similarity', 'graph'],
+  Policymaker: ['dashboard']
+};
+
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +36,8 @@ function App() {
     const saved = sessionStorage.getItem('drishti_user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  const allowedTabs = user ? (rolePermissions[user.role] || ['dashboard']) : ['dashboard'];
 
   // Derive activeTab from current URL pathname
   const path = location.pathname.substring(1) || 'dashboard';
@@ -74,24 +85,36 @@ function App() {
           </button>
         </div>
         <nav className="sidebar-nav">
-          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
-            <span className="nav-icon"><DashboardIcon size={16} /></span> Dashboard Overview
-          </div>
-          <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => handleTabChange('chat')}>
-            <span className="nav-icon"><ChatIcon size={16} /></span> Conversational RAG
-          </div>
-          <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => handleTabChange('ocr')}>
-            <span className="nav-icon"><OcrIcon size={16} /></span> Kannada OCR & NER
-          </div>
-          <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => handleTabChange('document')}>
-            <span className="nav-icon"><DocumentIcon size={16} /></span> Financial Document AI
-          </div>
-          <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => handleTabChange('similarity')}>
-            <span className="nav-icon"><SimilarityIcon size={16} /></span> Modus Operandi Linkage
-          </div>
-          <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => handleTabChange('graph')}>
-            <span className="nav-icon"><GraphIcon size={16} /></span> Network Connection Graph
-          </div>
+          {allowedTabs.includes('dashboard') && (
+            <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
+              <span className="nav-icon"><DashboardIcon size={16} /></span> Dashboard Overview
+            </div>
+          )}
+          {allowedTabs.includes('chat') && (
+            <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => handleTabChange('chat')}>
+              <span className="nav-icon"><ChatIcon size={16} /></span> Conversational RAG
+            </div>
+          )}
+          {allowedTabs.includes('ocr') && (
+            <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => handleTabChange('ocr')}>
+              <span className="nav-icon"><OcrIcon size={16} /></span> Kannada OCR & NER
+            </div>
+          )}
+          {allowedTabs.includes('document') && (
+            <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => handleTabChange('document')}>
+              <span className="nav-icon"><DocumentIcon size={16} /></span> Financial Document AI
+            </div>
+          )}
+          {allowedTabs.includes('similarity') && (
+            <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => handleTabChange('similarity')}>
+              <span className="nav-icon"><SimilarityIcon size={16} /></span> Modus Operandi Linkage
+            </div>
+          )}
+          {allowedTabs.includes('graph') && (
+            <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => handleTabChange('graph')}>
+              <span className="nav-icon"><GraphIcon size={16} /></span> Network Connection Graph
+            </div>
+          )}
         </nav>
         <div className="sidebar-footer">
           <p>KSP Crime Analytics Platform</p>
@@ -119,7 +142,7 @@ function App() {
             <p>Karnataka State Police &mdash; Crime Intelligence & Analytics System</p>
           </div>
           <div className="header-meta-section">
-            <span className="badge badge-blue">Secure Session</span>
+            <span className="badge badge-blue">{user.role} Session</span>
             <span className="badge badge-green">IN-DataCenter</span>
             <div className="officer-profile">
               <div className="officer-avatar">{initials}</div>
@@ -135,12 +158,12 @@ function App() {
         <div className="content-viewport">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardView />} />
-            <Route path="/chat" element={<ChatView setActiveTab={(tab) => handleTabChange(tab)} />} />
-            <Route path="/ocr" element={<OcrView />} />
-            <Route path="/document" element={<DocumentView />} />
-            <Route path="/similarity" element={<SimilarityView />} />
-            <Route path="/graph" element={<GraphView />} />
+            <Route path="/dashboard" element={<DashboardView user={user} />} />
+            <Route path="/chat" element={allowedTabs.includes('chat') ? <ChatView setActiveTab={(tab) => handleTabChange(tab)} /> : <Navigate to="/dashboard" replace />} />
+            <Route path="/ocr" element={allowedTabs.includes('ocr') ? <OcrView /> : <Navigate to="/dashboard" replace />} />
+            <Route path="/document" element={allowedTabs.includes('document') ? <DocumentView /> : <Navigate to="/dashboard" replace />} />
+            <Route path="/similarity" element={allowedTabs.includes('similarity') ? <SimilarityView /> : <Navigate to="/dashboard" replace />} />
+            <Route path="/graph" element={allowedTabs.includes('graph') ? <GraphView /> : <Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>
