@@ -11,32 +11,39 @@ type Tab = 'dashboard' | 'chat' | 'ocr' | 'document' | 'similarity' | 'graph';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      {/* Sidebar Overlay */}
+      <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)} />
+
       {/* Sidebar Navigation */}
       <aside className="app-sidebar">
         <div className="sidebar-brand">
           <div className="sidebar-logo-container">D</div>
           <h1 className="sidebar-title">DRISHTI</h1>
+          <button className="sidebar-close-btn" onClick={() => setIsSidebarOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', display: 'none' }}>
+            ✕
+          </button>
         </div>
         <nav className="sidebar-nav">
-          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Dashboard Overview
           </div>
-          <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => setActiveTab('chat')}>
+          <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => { setActiveTab('chat'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Conversational RAG
           </div>
-          <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => setActiveTab('ocr')}>
+          <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => { setActiveTab('ocr'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Kannada OCR & NER
           </div>
-          <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => setActiveTab('document')}>
+          <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => { setActiveTab('document'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Financial Document AI
           </div>
-          <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => setActiveTab('similarity')}>
+          <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => { setActiveTab('similarity'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Modus Operandi Linkage
           </div>
-          <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => setActiveTab('graph')}>
+          <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => { setActiveTab('graph'); setIsSidebarOpen(false); }}>
             <span className="nav-icon"></span> Network Connection Graph
           </div>
         </nav>
@@ -50,6 +57,9 @@ function App() {
       <main className="app-main">
         {/* Header */}
         <header className="app-header">
+          <button className="sidebar-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            ☰
+          </button>
           <div className="header-title-section">
             <h2>
               {activeTab === 'dashboard' && 'Platform Overview & Intel Dashboard'}
