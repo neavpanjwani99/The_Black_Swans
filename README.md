@@ -4,8 +4,7 @@ DRISHTI is a full-stack prototype dashboard built with React (frontend) and Node
 
 ## Developers
 - **Neav Panjwani**
-- **gautam doliya**
-- **Veera Gupta**
+- **Gautam Doliya**
 - **Manya Nirvan**
 
 ---
