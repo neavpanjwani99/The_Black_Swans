@@ -142,7 +142,7 @@ export function OcrView() {
         for (let i = 0; i < canvases.length; i++) {
           setOcrStatusMsg(`OCR on page ${i + 1} of ${canvases.length}...`);
           const result = await Tesseract.recognize(canvases[i], 'eng', {
-            logger: (m) => {
+            logger: (m: any) => {
               if (m.status === 'recognizing text') {
                 const pageProgress = ((i / canvases.length) + (m.progress / canvases.length)) * 100;
                 setOcrProgress(Math.round(pageProgress));
@@ -158,7 +158,7 @@ export function OcrView() {
         // Image: OCR directly
         setOcrStatusMsg('Recognizing text from image...');
         const result = await Tesseract.recognize(file, 'eng', {
-          logger: (m) => {
+          logger: (m: any) => {
             if (m.status === 'recognizing text') {
               setOcrProgress(Math.round(m.progress * 100));
             }
