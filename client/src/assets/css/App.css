@@ -22,11 +22,12 @@
 }
 
 .sidebar-brand {
-  height: var(--header-height);
+  height: auto;
+  min-height: var(--header-height);
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--card-border);
 }
 
@@ -233,8 +234,8 @@
 
 /* Sidebar Logo Image */
 .sidebar-logo {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   border-radius: 4px;
 }

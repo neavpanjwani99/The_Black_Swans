@@ -3,6 +3,7 @@ import Tesseract from 'tesseract.js';
 import { api } from '../services/api';
 import type { OcrResponse, NerResponse, Entity } from '../services/api';
 import '../assets/css/OcrView.css';
+import { DocumentIcon, WarningIcon, ZapIcon, RefreshIcon, SearchIcon } from './Icons';
 
 // Helper to render PDF pages to canvases using PDF.js loaded from CDN
 async function renderPdfToCanvas(file: File): Promise<HTMLCanvasElement[]> {
@@ -216,7 +217,9 @@ export function OcrView() {
             onChange={handleFileSelect}
             disabled={ocrLoading}
           />
-          <div style={{ fontSize: '32px', color: 'var(--text-secondary)' }}>📄</div>
+          <div style={{ color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center' }}>
+            <DocumentIcon size={32} />
+          </div>
           {ocrFileName ? (
             <div style={{ textAlign: 'center' }}>
               <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--accent-blue)' }}>{ocrFileName}</p>
@@ -253,8 +256,8 @@ export function OcrView() {
 
         {/* Error Banner */}
         {ocrError && (
-          <div style={{ background: 'rgba(191,63,74,0.07)', border: '1px solid rgba(191,63,74,0.25)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: 'var(--accent-rose)' }}>
-            ⚠ {ocrError}
+          <div style={{ background: 'rgba(191,63,74,0.07)', border: '1px solid rgba(191,63,74,0.25)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: 'var(--accent-rose)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <WarningIcon size={14} /> {ocrError}
           </div>
         )}
 
@@ -279,7 +282,7 @@ export function OcrView() {
         >
           {ocrLoading
             ? <><span className="spinner" /><span style={{ marginLeft: '8px' }}>{ocrStatusMsg || 'Processing...'}</span></>
-            : '⚡ Analyze Text with AI'}
+            : <><ZapIcon size={14} style={{ marginRight: '6px' }} /> Analyze Text with AI</>}
         </button>
       </div>
 
@@ -367,17 +370,17 @@ export function OcrView() {
             {/* Reset button */}
             <button
               className="btn btn-secondary"
-              style={{ alignSelf: 'flex-start', fontSize: '12px', padding: '6px 14px' }}
+              style={{ alignSelf: 'flex-start', fontSize: '12px', padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               onClick={() => { setOcrResult(null); setNerResult(null); setOcrText(''); setOcrFileName(null); setOcrError(null); setOcrProgress(0); }}
             >
-              ↺ Clear Results
+              <RefreshIcon size={14} /> Clear Results
             </button>
           </div>
         )}
 
         {!ocrResult && !ocrLoading && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1, color: 'var(--text-muted)', gap: '12px', textAlign: 'center' }}>
-            <span style={{ fontSize: '40px' }}>🔍</span>
+            <span style={{ color: 'var(--text-muted)' }}><SearchIcon size={40} /></span>
             <div>
               <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>No analysis yet</p>
               <p style={{ fontSize: '12px' }}>Upload a document or enter text on the left to extract entities and relational fields.</p>

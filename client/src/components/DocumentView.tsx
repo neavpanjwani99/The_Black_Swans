@@ -3,6 +3,7 @@ import Tesseract from 'tesseract.js';
 import { api } from '../services/api';
 import type { DocumentResponse } from '../services/api';
 import '../assets/css/DocumentView.css';
+import { DocumentIcon } from './Icons';
 
 // Helper to render PDF pages to canvases using PDF.js loaded from CDN
 async function renderPdfToCanvas(file: File): Promise<HTMLCanvasElement[]> {
@@ -129,7 +130,7 @@ export function DocumentView() {
               onChange={handleFileSelect}
               disabled={docLoading}
             />
-            <span style={{ fontSize: '32px', marginBottom: '8px' }}>📄</span>
+            <span style={{ color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', marginBottom: '8px' }}><DocumentIcon size={32} /></span>
             <span style={{ fontSize: '13px', fontWeight: 600 }}>
               {docFileName ? docFileName : 'Upload Seized Passbook / Cheque (PDF/Image)'}
             </span>

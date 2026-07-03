@@ -8,6 +8,7 @@ import { DocumentView } from './components/DocumentView';
 import { SimilarityView } from './components/SimilarityView';
 import { GraphView } from './components/GraphView';
 import { LoginView } from './components/LoginView';
+import { DashboardIcon, ChatIcon, OcrIcon, DocumentIcon, SimilarityIcon, GraphIcon, CloseIcon } from './components/Icons';
 
 interface UserSession {
   name: string;
@@ -66,30 +67,30 @@ function App() {
       {/* Sidebar Navigation */}
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <img src="/Main-logo.png" alt="DRISHTI Logo" className="sidebar-logo" />
+          <img src="/dashboard-logo.png" alt="DRISHTI Logo" className="sidebar-logo" />
           <h1 className="sidebar-title">DRISHTI</h1>
-          <button className="sidebar-close-btn" onClick={() => setIsSidebarOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', display: 'none' }}>
-            ✕
+          <button className="sidebar-close-btn" onClick={() => setIsSidebarOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)' }}>
+            <CloseIcon size={20} />
           </button>
         </div>
         <nav className="sidebar-nav">
           <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
-            <span className="nav-icon"></span> Dashboard Overview
+            <span className="nav-icon"><DashboardIcon size={16} /></span> Dashboard Overview
           </div>
           <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => handleTabChange('chat')}>
-            <span className="nav-icon"></span> Conversational RAG
+            <span className="nav-icon"><ChatIcon size={16} /></span> Conversational RAG
           </div>
           <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => handleTabChange('ocr')}>
-            <span className="nav-icon"></span> Kannada OCR & NER
+            <span className="nav-icon"><OcrIcon size={16} /></span> Kannada OCR & NER
           </div>
           <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => handleTabChange('document')}>
-            <span className="nav-icon"></span> Financial Document AI
+            <span className="nav-icon"><DocumentIcon size={16} /></span> Financial Document AI
           </div>
           <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => handleTabChange('similarity')}>
-            <span className="nav-icon"></span> Modus Operandi Linkage
+            <span className="nav-icon"><SimilarityIcon size={16} /></span> Modus Operandi Linkage
           </div>
           <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => handleTabChange('graph')}>
-            <span className="nav-icon"></span> Network Connection Graph
+            <span className="nav-icon"><GraphIcon size={16} /></span> Network Connection Graph
           </div>
         </nav>
         <div className="sidebar-footer">
