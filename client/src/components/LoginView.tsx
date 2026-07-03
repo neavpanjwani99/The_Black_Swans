@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../services/api';
 import '../assets/css/LoginView.css';
 
 interface LoginViewProps {
@@ -11,7 +12,7 @@ export function LoginView({ onLogin }: LoginViewProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -22,21 +23,18 @@ export function LoginView({ onLogin }: LoginViewProps) {
 
     setLoading(true);
 
-    // Simulate authentication check
-    setTimeout(() => {
+    try {
+      const res = await api.login(badgeNumber, password);
       setLoading(false);
-      // Hardcoded credentials for development
-      if (badgeNumber.trim() === 'KSP-7482' && password === 'password') {
-        onLogin({
-          name: 'Inspector Verma',
-          badgeNumber: 'KSP-7482',
-          role: 'Crime Intelligence Officer',
-          station: 'Banaswadi PS'
-        });
+      if (res.success && res.user) {
+        onLogin(res.user);
       } else {
-        setError('Invalid Badge Number or Access PIN. Use KSP-7482 & password.');
+        setError(res.message || 'Invalid credentials.');
       }
-    }, 800);
+    } catch (err) {
+      setLoading(false);
+      setError('Connection to authentication services failed.');
+    }
   };
 
   return (
@@ -45,6 +43,7 @@ export function LoginView({ onLogin }: LoginViewProps) {
         <img src="/Main-logo.png" alt="DRISHTI Logo" className="login-logo" />
         <h1 className="login-title">DRISHTI</h1>
         <p className="login-subtitle">Karnataka State Police &mdash; Crime Analytics Portal</p>
+        <div className="login-badge">Secure Intel Channel &bull; Level 3 Access</div>
 
         {error && <div className="login-error">{error}</div>}
 

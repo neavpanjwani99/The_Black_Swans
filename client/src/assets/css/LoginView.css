@@ -1,126 +1,231 @@
-/* Login Page CSS */
+/* Login Page CSS - Premium KSP Tactical Portal */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  /* Deep tactical background with dark radial lighting */
+  background: radial-gradient(circle at center, #2b3530 0%, #151a17 100%);
   font-family: inherit;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background grid glow overlay */
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ambient glow orb */
+.login-container::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(90, 108, 99, 0.1) 0%, transparent 70%);
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .login-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 48px 36px;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  max-width: 440px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 2;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
 .login-logo {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
 }
 
 .login-title {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-  letter-spacing: 0.5px;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
 }
 
 .login-subtitle {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: #8a9a91;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+/* Security Badge Pill */
+.login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: rgba(90, 108, 99, 0.2);
+  border: 1px solid rgba(90, 108, 99, 0.3);
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #a4b4ab;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 24px;
+}
+
+.login-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background-color: #3d7e63;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #3d7e63;
 }
 
 .login-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   text-align: left;
 }
 
 .form-group label {
   font-size: 11px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #a4b4ab;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .form-input {
   width: 100%;
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.25);
+  color: #ffffff;
   font-size: 14px;
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .form-input:focus {
-  border-color: var(--accent-blue);
-  background-color: var(--bg-secondary);
+  border-color: #5a6c63;
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 12px rgba(90, 108, 99, 0.25);
 }
 
 .login-btn {
   width: 100%;
-  padding: 12px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-  color: white;
-  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #5a6c63 0%, #3d4a43 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 8px;
+  transition: all 0.25s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
 }
 
 .login-btn:hover {
-  opacity: 0.95;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #6c7e75 0%, #46544c 100%);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(90, 108, 99, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
 }
 
 .login-btn:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .login-error {
-  background: rgba(191, 63, 74, 0.05);
-  border: 1px solid rgba(191, 63, 74, 0.15);
-  color: var(--accent-rose);
-  padding: 10px 14px;
-  border-radius: 6px;
+  background: rgba(191, 63, 74, 0.12);
+  border: 1px solid rgba(191, 63, 74, 0.25);
+  color: #ff8a93;
+  padding: 12px 16px;
+  border-radius: 8px;
   font-size: 12px;
   width: 100%;
   text-align: left;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .login-footer {
-  margin-top: 24px;
+  margin-top: 32px;
   font-size: 11px;
-  color: var(--text-muted);
+  color: #6b736e;
+  line-height: 1.5;
+}
+
+.login-footer p:first-child {
+  font-weight: 500;
+  color: #8a9a91;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 36px 24px;
+    border-radius: 16px;
+  }
+  
+  .login-title {
+    font-size: 22px;
+  }
 }

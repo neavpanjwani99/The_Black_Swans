@@ -315,5 +315,42 @@ export const api = {
         generatedAt: new Date().toISOString()
       };
     }
+  },
+
+  async login(badgeNumber: string, accessPin: string): Promise<{ success: boolean; message?: string; user?: { name: string; badgeNumber: string; role: string; station: string } }> {
+    try {
+      // NOTE: When backend authentication is ready, simply uncomment the block below:
+      /*
+      const res = await fetch(`${API_BASE_URL.replace('/ai', '')}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ badgeNumber, accessPin })
+      });
+      return await res.json();
+      */
+
+      // Dynamic Mock logic simulating backend authentication check:
+      if (badgeNumber.trim() === 'KSP-7482' && accessPin === 'password') {
+        return {
+          success: true,
+          user: {
+            name: 'Inspector Verma',
+            badgeNumber: 'KSP-7482',
+            role: 'Crime Intelligence Officer',
+            station: 'Banaswadi PS'
+          }
+        };
+      }
+      return {
+        success: false,
+        message: 'Invalid Badge Number or Access PIN. Use KSP-7482 & password.'
+      };
+    } catch (e) {
+      console.warn('Authentication API call failed, returning fallback mock data', e);
+      return {
+        success: false,
+        message: 'Authentication server connection failed.'
+      };
+    }
   }
 };
