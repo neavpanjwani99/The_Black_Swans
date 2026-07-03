@@ -7,11 +7,23 @@ import { OcrView } from './components/OcrView';
 import { DocumentView } from './components/DocumentView';
 import { SimilarityView } from './components/SimilarityView';
 import { GraphView } from './components/GraphView';
+import { LoginView } from './components/LoginView';
+
+interface UserSession {
+  name: string;
+  badgeNumber: string;
+  role: string;
+  station: string;
+}
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [user, setUser] = useState<UserSession | null>(() => {
+    const saved = localStorage.getItem('drishti_user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   // Derive activeTab from current URL pathname
   const path = location.pathname.substring(1) || 'dashboard';
@@ -22,6 +34,28 @@ function App() {
     setIsSidebarOpen(false);
   };
 
+  const handleLogin = (userData: UserSession) => {
+    localStorage.setItem('drishti_user', JSON.stringify(userData));
+    setUser(userData);
+    navigate('/dashboard');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('drishti_user');
+    setUser(null);
+    navigate('/dashboard');
+  };
+
+  if (!user) {
+    return <LoginView onLogin={handleLogin} />;
+  }
+
+  const initials = user.name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
+
   return (
     <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       {/* Sidebar Overlay */}
@@ -30,7 +64,7 @@ function App() {
       {/* Sidebar Navigation */}
       <aside className="app-sidebar">
         <div className="sidebar-brand">
-          <div className="sidebar-logo-container">D</div>
+          <img src="/Main-logo.png" alt="DRISHTI Logo" className="sidebar-logo" />
           <h1 className="sidebar-title">DRISHTI</h1>
           <button className="sidebar-close-btn" onClick={() => setIsSidebarOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', display: 'none' }}>
             ✕
@@ -58,7 +92,8 @@ function App() {
         </nav>
         <div className="sidebar-footer">
           <p>KSP Crime Analytics Platform</p>
-          <p style={{ marginTop: '4px' }}>v1.0.0</p>
+          <p style={{ marginTop: '4px', fontSize: '10px', color: 'var(--text-muted)' }}>Logged in as {user.badgeNumber}</p>
+          <button className="btn-logout" onClick={handleLogout}>Log Out</button>
         </div>
       </aside>
 
@@ -84,10 +119,10 @@ function App() {
             <span className="badge badge-blue">Secure Session</span>
             <span className="badge badge-green">IN-DataCenter</span>
             <div className="officer-profile">
-              <div className="officer-avatar">IV</div>
+              <div className="officer-avatar">{initials}</div>
               <div>
-                <p style={{ fontWeight: 600 }}>Inspector Verma</p>
-                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Banaswadi PS</p>
+                <p style={{ fontWeight: 600 }}>{user.name}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{user.station}</p>
               </div>
             </div>
           </div>
