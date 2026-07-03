@@ -29,8 +29,9 @@ This repository contains a working prototype of the dashboard. The features are 
 The_Black_Swans/
 ├── client/                     # React Frontend
 │   ├── src/
+│   │   ├── components/         # Modular tab sub-views (Dashboard, Chat, OCR, etc.)
 │   │   ├── services/api.ts     # API calls to backend & mock fallbacks
-│   │   ├── App.tsx             # Main dashboard UI component (tabs, layouts)
+│   │   ├── App.tsx             # Main layout container shell
 │   │   ├── App.css             # Light sage-grey dashboard styling
 │   │   └── main.tsx
 │   └── package.json
