@@ -15,3 +15,6 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Documentation not to be pushed
+client_architecture.md
