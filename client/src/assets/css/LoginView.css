@@ -1,4 +1,4 @@
-/* Login Page CSS - Premium KSP Tactical Portal */
+/* Login Page CSS - Matching Dashboard Sage-Grey & White Palette */
 .login-container {
   display: flex;
   align-items: center;
@@ -7,15 +7,15 @@
   width: 100vw;
   height: 100vh;
   flex: 1 0 100%;
-  /* Deep tactical background with dark radial lighting */
-  background: radial-gradient(circle at center, #2b3530 0%, #151a17 100%);
+  /* Light sage-grey background matching the main app background */
+  background: radial-gradient(circle at center, #fbfcfb 0%, var(--bg-primary) 100%), var(--bg-primary);
   font-family: inherit;
   padding: 20px;
   position: relative;
   overflow: hidden;
 }
 
-/* Background grid glow overlay */
+/* Subtle decorative grid overlay */
 .login-container::before {
   content: '';
   position: absolute;
@@ -24,22 +24,22 @@
   right: 0;
   bottom: 0;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
-  background-size: 30px 30px;
+    linear-gradient(rgba(90, 108, 99, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 108, 99, 0.015) 1px, transparent 1px);
+  background-size: 32px 32px;
   background-position: center;
   pointer-events: none;
   z-index: 1;
 }
 
-/* Ambient glow orb */
+/* Subtle top glow to match dashboard aesthetic */
 .login-container::after {
   content: '';
   position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(90, 108, 99, 0.1) 0%, transparent 70%);
-  top: 10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(90, 108, 99, 0.04) 0%, transparent 70%);
+  top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -47,63 +47,60 @@
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   padding: 48px 36px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(90, 108, 99, 0.06);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  border-color: var(--card-border-glow);
+  box-shadow: 0 15px 40px rgba(90, 108, 99, 0.1);
 }
 
 .login-logo {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   margin-bottom: 20px;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
 }
 
 .login-title {
   font-size: 26px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 6px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .login-subtitle {
   font-size: 13px;
-  color: #8a9a91;
-  margin-bottom: 30px;
-  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
 }
 
-/* Security Badge Pill */
+/* Security Badge Pill - Blue Badge Theme */
 .login-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background-color: rgba(90, 108, 99, 0.2);
-  border: 1px solid rgba(90, 108, 99, 0.3);
+  background-color: rgba(90, 108, 99, 0.08);
+  border: 1px solid rgba(90, 108, 99, 0.2);
   border-radius: 20px;
   font-size: 10px;
   font-weight: 700;
-  color: #a4b4ab;
+  color: var(--accent-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 24px;
@@ -113,9 +110,9 @@
   content: '';
   width: 6px;
   height: 6px;
-  background-color: #3d7e63;
+  background-color: var(--accent-emerald);
   border-radius: 50%;
-  box-shadow: 0 0 8px #3d7e63;
+  box-shadow: 0 0 8px var(--accent-emerald);
 }
 
 .login-form {
@@ -135,7 +132,7 @@
 .form-group label {
   font-size: 11px;
   font-weight: 600;
-  color: #a4b4ab;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
@@ -144,44 +141,43 @@
   width: 100%;
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(0, 0, 0, 0.25);
-  color: #ffffff;
+  border: 1px solid var(--card-border);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   font-size: 14px;
   outline: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 
 .form-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-muted);
 }
 
 .form-input:focus {
-  border-color: #5a6c63;
-  background-color: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 12px rgba(90, 108, 99, 0.25);
+  border-color: var(--accent-blue);
+  background-color: var(--bg-secondary);
+  box-shadow: 0 0 0 3px rgba(90, 108, 99, 0.1);
 }
 
 .login-btn {
   width: 100%;
   padding: 14px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #5a6c63 0%, #3d4a43 100%);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: none;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   margin-top: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(90, 108, 99, 0.15);
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, #6c7e75 0%, #46544c 100%);
-  transform: translateY(-1.5px);
-  box-shadow: 0 6px 16px rgba(90, 108, 99, 0.3);
+  opacity: 0.95;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(90, 108, 99, 0.2);
 }
 
 .login-btn:active {
@@ -196,9 +192,9 @@
 }
 
 .login-error {
-  background: rgba(191, 63, 74, 0.12);
-  border: 1px solid rgba(191, 63, 74, 0.25);
-  color: #ff8a93;
+  background: rgba(191, 63, 74, 0.05);
+  border: 1px solid rgba(191, 63, 74, 0.2);
+  color: var(--accent-rose);
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 12px;
@@ -206,19 +202,18 @@
   text-align: left;
   margin-bottom: 20px;
   line-height: 1.4;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .login-footer {
   margin-top: 32px;
   font-size: 11px;
-  color: #6b736e;
+  color: var(--text-muted);
   line-height: 1.5;
 }
 
 .login-footer p:first-child {
   font-weight: 500;
-  color: #8a9a91;
+  color: var(--text-secondary);
 }
 
 /* Responsive adjustments */
