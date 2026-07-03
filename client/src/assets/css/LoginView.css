@@ -4,6 +4,9 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  flex: 1 0 100%;
   /* Deep tactical background with dark radial lighting */
   background: radial-gradient(circle at center, #2b3530 0%, #151a17 100%);
   font-family: inherit;
