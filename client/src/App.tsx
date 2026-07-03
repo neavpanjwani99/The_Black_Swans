@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import './App.css';
 import { DashboardView } from './components/DashboardView';
 import { ChatView } from './components/ChatView';
@@ -7,11 +8,19 @@ import { DocumentView } from './components/DocumentView';
 import { SimilarityView } from './components/SimilarityView';
 import { GraphView } from './components/GraphView';
 
-type Tab = 'dashboard' | 'chat' | 'ocr' | 'document' | 'similarity' | 'graph';
-
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Derive activeTab from current URL pathname
+  const path = location.pathname.substring(1) || 'dashboard';
+  const activeTab = ['dashboard', 'chat', 'ocr', 'document', 'similarity', 'graph'].includes(path) ? path : 'dashboard';
+
+  const handleTabChange = (tab: string) => {
+    navigate(`/${tab}`);
+    setIsSidebarOpen(false);
+  };
 
   return (
     <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
@@ -28,22 +37,22 @@ function App() {
           </button>
         </div>
         <nav className="sidebar-nav">
-          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
             <span className="nav-icon"></span> Dashboard Overview
           </div>
-          <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => { setActiveTab('chat'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`} onClick={() => handleTabChange('chat')}>
             <span className="nav-icon"></span> Conversational RAG
           </div>
-          <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => { setActiveTab('ocr'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'ocr' ? 'active' : ''}`} onClick={() => handleTabChange('ocr')}>
             <span className="nav-icon"></span> Kannada OCR & NER
           </div>
-          <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => { setActiveTab('document'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'document' ? 'active' : ''}`} onClick={() => handleTabChange('document')}>
             <span className="nav-icon"></span> Financial Document AI
           </div>
-          <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => { setActiveTab('similarity'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'similarity' ? 'active' : ''}`} onClick={() => handleTabChange('similarity')}>
             <span className="nav-icon"></span> Modus Operandi Linkage
           </div>
-          <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => { setActiveTab('graph'); setIsSidebarOpen(false); }}>
+          <div className={`nav-item ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => handleTabChange('graph')}>
             <span className="nav-icon"></span> Network Connection Graph
           </div>
         </nav>
@@ -86,12 +95,16 @@ function App() {
 
         {/* Viewport Content */}
         <div className="content-viewport">
-          {activeTab === 'dashboard' && <DashboardView />}
-          {activeTab === 'chat' && <ChatView setActiveTab={setActiveTab} />}
-          {activeTab === 'ocr' && <OcrView />}
-          {activeTab === 'document' && <DocumentView />}
-          {activeTab === 'similarity' && <SimilarityView />}
-          {activeTab === 'graph' && <GraphView />}
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<DashboardView />} />
+            <Route path="/chat" element={<ChatView setActiveTab={(tab) => handleTabChange(tab)} />} />
+            <Route path="/ocr" element={<OcrView />} />
+            <Route path="/document" element={<DocumentView />} />
+            <Route path="/similarity" element={<SimilarityView />} />
+            <Route path="/graph" element={<GraphView />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
         </div>
       </main>
     </div>
