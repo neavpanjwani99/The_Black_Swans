@@ -21,7 +21,9 @@ function App() {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState<UserSession | null>(() => {
-    const saved = localStorage.getItem('drishti_user');
+    // Clear legacy localStorage data to clean up persistent logins
+    localStorage.removeItem('drishti_user');
+    const saved = sessionStorage.getItem('drishti_user');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -35,13 +37,13 @@ function App() {
   };
 
   const handleLogin = (userData: UserSession) => {
-    localStorage.setItem('drishti_user', JSON.stringify(userData));
+    sessionStorage.setItem('drishti_user', JSON.stringify(userData));
     setUser(userData);
     navigate('/dashboard');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('drishti_user');
+    sessionStorage.removeItem('drishti_user');
     setUser(null);
     navigate('/dashboard');
   };
