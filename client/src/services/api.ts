@@ -257,7 +257,7 @@ export const api = {
           { date: '2024-02-03', type: 'CREDIT', amount: 120000, sender: 'Unidentified' },
           { date: '2024-02-05', type: 'DEBIT', amount: 205000, sender: 'Cash Withdrawal' }
         ],
-        riskPatternFlag: 'Large cash withdrawal within 48 hours of credit. Possible hawala pattern.'
+        riskPatternFlag: 'Large cash withdrawal within 48 hours of credit. Flagged for manual review.'
       };
     }
   },

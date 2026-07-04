@@ -198,7 +198,7 @@ export function DocumentView() {
               
               <div className="risk-banner">
                 <div>
-                  <p style={{ fontWeight: 600 }}>Hawala Transaction Flag</p>
+                  <p style={{ fontWeight: 600 }}>Suspicious Pattern Flag</p>
                   <p style={{ fontSize: '11px', color: 'var(--accent-rose)' }}>{docResult.riskPatternFlag}</p>
                 </div>
               </div>

@@ -43,7 +43,7 @@ export function GraphView() {
           <div>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Criminal Co-offending Network Map</h3>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-              Network visualization of co-accused contacts, vehicle logs, and case records. Analyzed {graphLinks.length} connections.
+              Network visualization of co-accused contacts, vehicle logs, and case records. Analyzed {graphLinks.length} {graphLinks.length === 1 ? 'connection' : 'connections'}.
             </p>
           </div>
         </div>

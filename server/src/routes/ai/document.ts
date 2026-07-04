@@ -28,12 +28,12 @@ Extract the details into a valid JSON object with the following structure:
    - "accountName": Name of the account holder
    - "accountNumber": Account number
    - "ifsc": IFSC code
-3. "flaggedTransactions": An array of transaction objects that look suspicious (e.g., large rapid deposits/withdrawals, hawala patterns). Each object should have:
+3. "flaggedTransactions": An array of transaction objects that look suspicious (e.g., large rapid deposits/withdrawals, anomalous patterns). Each object should have:
    - "date": Date of transaction (YYYY-MM-DD)
    - "type": "CREDIT" or "DEBIT"
    - "amount": Number representing the amount
    - "sender": Counterparty name or "Cash Withdrawal" / "Unidentified"
-4. "riskPatternFlag": A string describing any suspicious pattern found (e.g., "Large cash withdrawal within 48 hours of credit. Possible hawala pattern."). Return null if no suspicious pattern.
+4. "riskPatternFlag": A string describing any suspicious pattern found (e.g., "Large cash withdrawal within 48 hours of credit. Flagged for manual review."). Return null if no suspicious pattern.
 
 Return ONLY a valid JSON object. Do not include any markdown formatting, explanation, or backticks.`;
 
