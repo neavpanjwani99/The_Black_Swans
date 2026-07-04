@@ -5,14 +5,14 @@ import dotenv from 'dotenv';
 import { aiRouter } from './routes/ai.js';
 import { healthRouter } from './routes/health.js';
 
-
+// config .env file ke chize li hui hai 
 dotenv.config();
 
-
+// variable ke ander express ke fucntions daale hai 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // explicitly port 
 
-app.use(cors());
+app.use(cors()); // frontend and backend server saare connect karta hai 
 app.use(express.json());
 
 // Basic health check route
