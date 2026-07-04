@@ -92,6 +92,7 @@ export function OcrView() {
   const [ocrStatusMsg, setOcrStatusMsg] = useState('');
   const [ocrFileName, setOcrFileName] = useState<string | null>(null);
   const [ocrError, setOcrError] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState(1.0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Process text manually entered in textarea
@@ -103,7 +104,7 @@ export function OcrView() {
     setOcrStatusMsg('Sending to AI for analysis...');
     try {
       const [ocrRes, nerRes] = await Promise.all([
-        api.runOcr(ocrText, 1.0),
+        api.runOcr(ocrText, confidence),
         api.runNer(ocrText)
       ]);
       setOcrResult(ocrRes);
@@ -171,16 +172,8 @@ export function OcrView() {
       }
 
       setOcrText(extractedText);
+      setConfidence(tesseractConfidence);
       setOcrProgress(100);
-      setOcrStatusMsg('Sending to AI for analysis...');
-
-      const [ocrRes, nerRes] = await Promise.all([
-        api.runOcr(extractedText, tesseractConfidence),
-        api.runNer(extractedText)
-      ]);
-
-      setOcrResult(ocrRes);
-      setNerResult(nerRes);
     } catch (err: any) {
       console.error('OCR Error:', err);
       setOcrError(err.message || 'An error occurred during OCR processing.');
@@ -282,7 +275,7 @@ export function OcrView() {
         >
           {ocrLoading
             ? <><span className="spinner" /><span style={{ marginLeft: '8px' }}>{ocrStatusMsg || 'Processing...'}</span></>
-            : <><ZapIcon size={14} style={{ marginRight: '6px' }} /> Analyze Text with AI</>}
+            : <><ZapIcon size={14} style={{ marginRight: '6px' }} /> Analyze</>}
         </button>
       </div>
 

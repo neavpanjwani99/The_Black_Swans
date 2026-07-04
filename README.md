@@ -62,3 +62,16 @@ npm install
 npm run dev
 ```
 Open `http://localhost:5173` in your browser to view the dashboard.
+
+---
+
+## Demo Credentials
+
+The login system enforces role-based access control (RBAC). Use the following credentials to test different views:
+
+| Role | Officer Badge Number | Access PIN / Password | Allowed Views |
+| :--- | :--- | :--- | :--- |
+| **Investigator** | `KSP-7482` | `password` | All Views (Dashboard, Chat, OCR, Document, Similarity, Graph) |
+| **Analyst** | `KSP-9921` | `password` | All except Chat View |
+| **Supervisor** | `KSP-1042` | `password` | All except OCR & Document View |
+| **Policymaker** | `KSP-2030` | `password` | Dashboard Only (with Aggregated Policy Metrics) |

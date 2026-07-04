@@ -94,15 +94,6 @@ export function LoginView({ onLogin }: LoginViewProps) {
             </button>
           </form>
 
-          <div className="demo-credentials-box">
-            <p className="demo-credentials-title">Demo Role Credentials (PIN: password):</p>
-            <ul className="demo-credentials-list">
-              <li><strong>Investigator:</strong> KSP-7482 (All Views)</li>
-              <li><strong>Analyst:</strong> KSP-9921 (No Chat View)</li>
-              <li><strong>Supervisor:</strong> KSP-1042 (No OCR & Document View)</li>
-              <li><strong>Policymaker:</strong> KSP-2030 (Dashboard Only)</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
