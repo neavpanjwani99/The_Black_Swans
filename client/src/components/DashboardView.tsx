@@ -47,12 +47,26 @@ export function DashboardView({ user }: DashboardViewProps) {
     <div className="dashboard-grid">
       {/* Role Announcement Banner */}
       {user && (
-        <div className="dashboard-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-secondary)', borderLeft: '4px solid var(--accent-blue)' }}>
-          <div>
-            <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>Welcome, {user.name}</h2>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Logged in as: <strong>{user.role}</strong> &bull; Assigned: <strong>{user.station}</strong></p>
+        <div className="welcome-banner">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', zIndex: 2 }}>
+            <div className="welcome-avatar-container">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="welcome-banner-title">Welcome back, Officer {user.name}</h2>
+              <p className="welcome-banner-subtitle">
+                <span>Clearance Level: <strong>{user.role}</strong></span>
+                <span style={{ opacity: 0.5 }}>&bull;</span>
+                <span>Active Duty Station: <strong>{user.station}</strong></span>
+              </p>
+            </div>
           </div>
-          <span className="badge badge-blue">{user.role} Console</span>
+          <div style={{ zIndex: 2 }}>
+            <span className="badge badge-blue">{user.role} Intelligence Console</span>
+          </div>
         </div>
       )}
 
