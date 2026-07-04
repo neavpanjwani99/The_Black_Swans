@@ -75,7 +75,9 @@ export function DashboardView({ user }: DashboardViewProps) {
               {isPolicymaker ? '24' : anomalies.filter(a => !a.acknowledged).length}
             </div>
             <div className="metric-delta delta-down">
-              {isPolicymaker ? 'Flagged district deviations' : '4 active cases flagged'}
+              {isPolicymaker 
+                ? 'Flagged district deviations' 
+                : `${anomalies.length} total active cases flagged, including ${anomalies.filter(a => !a.acknowledged).length} new overnight.`}
             </div>
           </div>
         </div>
