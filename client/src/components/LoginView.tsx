@@ -24,6 +24,36 @@ export function LoginView({ onLogin }: LoginViewProps) {
     setLoading(true);
 
     try {
+      // Check if Catalyst Web SDK is loaded (for production Zoho environment)
+      const catalyst = (window as any).catalyst;
+      if (catalyst && catalyst.auth) {
+        try {
+          // Catalyst requires an email-formatted login ID.
+          // Map badge ID to simulated KSP email domain for authentication
+          const email = badgeNumber.includes('@') ? badgeNumber : `${badgeNumber.toLowerCase().replace(/[^a-z0-9]/g, '')}@ksp.gov.in`;
+          
+          await catalyst.auth.signIn({
+            email: email,
+            password: password
+          });
+
+          // Fetch current user details from Catalyst session
+          const userDetails = await catalyst.auth.getCurrentUser();
+          
+          onLogin({
+            name: `${userDetails.first_name} ${userDetails.last_name}`.trim() || 'KSP Officer',
+            badgeNumber: badgeNumber,
+            role: userDetails.role_details?.role_name || 'Investigator',
+            station: 'Bengaluru Command Center'
+          });
+          setLoading(false);
+          return;
+        } catch (authErr: any) {
+          console.warn('Zoho Catalyst auth failed, trying local mockup fallback:', authErr);
+        }
+      }
+
+      // Local mockup authentication fallback
       const res = await api.login(badgeNumber, password);
       setLoading(false);
       if (res.success && res.user) {
@@ -33,9 +63,10 @@ export function LoginView({ onLogin }: LoginViewProps) {
       }
     } catch (err) {
       setLoading(false);
-      setError('Connection to authentication services failed.');
+      setError('Connection to KSP authentication services failed.');
     }
   };
+
 
   return (
     <div className="login-container">

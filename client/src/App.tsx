@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import './assets/css/App.css';
 import { DashboardView } from './components/DashboardView';
@@ -30,6 +30,19 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const catalyst = (window as any).catalyst;
+    if (catalyst) {
+      try {
+        // Automatically reads project-config when deployed under Catalyst domain
+        catalyst.init();
+      } catch (err) {
+        console.warn('Failed to initialize Zoho Catalyst SDK:', err);
+      }
+    }
+  }, []);
+
   const [user, setUser] = useState<UserSession | null>(() => {
     // Clear legacy localStorage data to clean up persistent logins
     localStorage.removeItem('drishti_user');

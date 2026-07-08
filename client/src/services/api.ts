@@ -1,5 +1,26 @@
 const API_BASE_URL = 'http://localhost:5000/api/ai';
 
+const getHeaders = (extraHeaders: Record<string, string> = {}) => {
+  const saved = sessionStorage.getItem('drishti_user');
+  let authHeaders: Record<string, string> = {};
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      authHeaders = {
+        'x-user-role': parsed.role || '',
+        'x-badge-number': parsed.badgeNumber || ''
+      };
+    } catch (e) {
+      // ignore
+    }
+  }
+  return {
+    ...authHeaders,
+    ...extraHeaders
+  };
+};
+
+
 export interface ChatResponse {
   response: string;
   citations: Array<{ id: string; station: string; type: string; date: string }>;
@@ -124,7 +145,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ message, history })
       });
       return await res.json();
@@ -143,7 +164,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/ocr`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text, confidence })
       });
       return await res.json();
@@ -176,7 +197,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/ner`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text })
       });
       return await res.json();
@@ -193,7 +214,9 @@ export const api = {
 
   async getForecast(): Promise<ForecastResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/forecast`);
+      const res = await fetch(`${API_BASE_URL}/forecast`, {
+        headers: getHeaders()
+      });
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
@@ -209,7 +232,9 @@ export const api = {
 
   async getAnomaly(): Promise<AnomalyResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/anomaly`);
+      const res = await fetch(`${API_BASE_URL}/anomaly`, {
+        headers: getHeaders()
+      });
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
@@ -237,7 +262,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/document`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text })
       });
       return await res.json();
@@ -266,7 +291,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/similarity`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ firDetails })
       });
       return await res.json();
@@ -283,7 +308,9 @@ export const api = {
   async getGraph(query?: string): Promise<GraphResponse> {
     try {
       const url = query ? `${API_BASE_URL}/graph?q=${encodeURIComponent(query)}` : `${API_BASE_URL}/graph`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getHeaders()
+      });
       return await res.json();
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
@@ -303,7 +330,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/export-pdf`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ chatId })
       });
       return await res.json();

@@ -83,6 +83,49 @@ function renderHighlightedText(text: string, entities: Entity[]) {
   return parts;
 }
 
+// Helper to generate timeline events from OCR data
+interface TimelineEvent {
+  date: string;
+  title: string;
+  description: string;
+}
+
+function generateTimelineEvents(extracted: any): TimelineEvent[] {
+  const events: TimelineEvent[] = [];
+  
+  if (extracted.incident_date) {
+    const d = new Date(extracted.incident_date);
+    events.push({
+      date: !isNaN(d.getTime()) ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : extracted.incident_date,
+      title: 'Incident Occurred',
+      description: `Crime event occurred at location: ${extracted.location || 'N/A'}`
+    });
+  }
+
+  if (extracted.registered_date) {
+    const d = new Date(extracted.registered_date);
+    const regDateStr = !isNaN(d.getTime()) ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : extracted.registered_date;
+    events.push({
+      date: regDateStr,
+      title: 'FIR Registered',
+      description: `Official registration under crime type: ${extracted.crime_type || 'N/A'} (IPC: ${extracted.ipc_sections?.join(', ') || 'N/A'})`
+    });
+
+    if (!isNaN(d.getTime())) {
+      const assigned = new Date(d);
+      assigned.setDate(assigned.getDate() + 1);
+      events.push({
+        date: assigned.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        title: 'Investigating Officer Assigned',
+        description: `Case file assigned for investigation at ${extracted.ps_name || 'N/A'}`
+      });
+    }
+  }
+
+  return events;
+}
+
+
 export function OcrView() {
   const [ocrText, setOcrText] = useState('');
   const [ocrResult, setOcrResult] = useState<OcrResponse | null>(null);
@@ -326,6 +369,31 @@ export function OcrView() {
                 <div className="detail-row" style={{ borderBottom: 'none', paddingBottom: 0 }}><span className="detail-label">Incident Location</span><span className="detail-value" style={{ fontWeight: 600 }}>{ocrResult.extractedFields.location || 'N/A'}</span></div>
               </div>
             </div>
+
+            {/* Chronological Investigation Timeline */}
+            <div style={{ background: 'rgba(255,255,255,0.4)', padding: '14px', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
+              <h4 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>Chronological Investigation Timeline:</h4>
+              <div style={{ position: 'relative', borderLeft: '2px solid var(--accent-blue)', margin: '5px 0 5px 8px', paddingLeft: '16px' }}>
+                {generateTimelineEvents(ocrResult.extractedFields).map((evt, idx) => (
+                  <div key={idx} style={{ marginBottom: '12px', position: 'relative' }}>
+                    <span style={{
+                      position: 'absolute',
+                      left: '-21px',
+                      top: '5px',
+                      background: 'var(--accent-blue)',
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      border: '2px solid var(--bg-card)'
+                    }} />
+                    <strong style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>{evt.date}</strong>
+                    <h5 style={{ margin: '1px 0 2px 0', fontSize: '13px', fontWeight: 600 }}>{evt.title}</h5>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>{evt.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
 
             {/* Named Entities Tagging */}
             {nerResult && nerResult.entities.length > 0 && (
