@@ -1,22 +1,20 @@
 import { Router } from 'express';
-import { chatRouter } from './ai/chat.js';
-import { ocrRouter } from './ai/ocr.js';
-import { nerRouter } from './ai/ner.js';
-import { forecastRouter } from './ai/forecast.js';
-import { anomalyRouter } from './ai/anomaly.js';
-import { documentRouter } from './ai/document.js';
-import { similarityRouter } from './ai/similarity.js';
-import { graphRouter } from './ai/graph.js';
-import { exportPdfRouter } from './ai/export-pdf.js';
+import { aiController } from '../controllers/aiController';
+import { verifyRbac } from '../middleware/rbac';
 
 export const aiRouter = Router();
 
-aiRouter.use('/chat', chatRouter);
-aiRouter.use('/ocr', ocrRouter);
-aiRouter.use('/ner', nerRouter);
-aiRouter.use('/forecast', forecastRouter);
-aiRouter.use('/anomaly', anomalyRouter);
-aiRouter.use('/document', documentRouter);
-aiRouter.use('/similarity', similarityRouter);
-aiRouter.use('/graph', graphRouter);
-aiRouter.use('/export-pdf', exportPdfRouter);
+// Secure all intelligence routes using Role-Based Access Control
+aiRouter.use(verifyRbac);
+
+// Route declarations (calling pure controller handlers)
+aiRouter.post('/chat', aiController.chat);
+aiRouter.post('/ocr', aiController.ocr);
+aiRouter.post('/ner', aiController.ner);
+aiRouter.get('/forecast', aiController.forecast);
+aiRouter.get('/anomaly', aiController.anomaly);
+aiRouter.post('/document', aiController.document);
+aiRouter.post('/similarity', aiController.similarity);
+aiRouter.get('/graph', aiController.graph);
+aiRouter.post('/export-pdf', aiController.exportPdf);
+aiRouter.get('/download-pdf/:id', aiController.downloadPdf);

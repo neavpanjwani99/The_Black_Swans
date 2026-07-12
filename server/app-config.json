@@ -1,0 +1,8 @@
+{
+  "command": "npm start",
+  "stack": "node20",
+  "memory": 256,
+  "env_variables": {
+    "NODE_ENV": "production"
+  }
+}

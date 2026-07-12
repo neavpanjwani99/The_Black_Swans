@@ -1,0 +1,42 @@
+ZOHO CATALYST DATABASE CONNECTION EXPLANATION
+============================================
+
+Here is a simple explanation of what was causing the database connection error, how it was fixed, and what you need to do next.
+
+---
+
+1. WHAT WAS THE ERROR?
+----------------------
+The database connection failed due to two main reasons:
+
+A. Missing "Project Key":
+   The Zoho Catalyst SDK requires three main details to initialize: Project ID, Environment, and Project Key. 
+   While your `.env` file had the Project ID, it was missing the "Project Key". Because this was missing (undefined), the SDK crashed with a confusing error saying "Not a number type".
+
+B. Wrong Datacenter Location (US vs India):
+   By default, the SDK tries to connect to Zoho's US servers (zoho.com). However, your project and credentials are hosted on Zoho's India servers (zoho.in). 
+   This difference causes Zoho to reject the connection with an "invalid_client" error.
+
+
+2. HOW DID WE FIX THE CRASH?
+----------------------------
+- We added a fallback so the server doesn't crash when the Project Key is missing.
+- We configured the SDK to point to Zoho India servers (zoho.in) instead of Zoho US servers.
+
+
+3. WHAT YOU NEED TO DO NEXT (CRITICAL STEP):
+-------------------------------------------
+Even though the code is fixed and won't crash, Zoho will not let your server query the database without your real Project Key.
+
+Please follow these steps to add it:
+
+Step 1: Open your browser and log into the Zoho Catalyst Console.
+Step 2: Go to your project (Drishti).
+Step 3: Click the Settings (Gear Icon) in the top-right corner, then go to:
+        Developer Access -> Credentials.
+Step 4: Copy the "Project Key" (it is a long text key).
+Step 5: Open your `.env` file (located in the server folder) and add this line at the bottom:
+
+        CATALYST_PROJECT_KEY=your_copied_project_key_here
+
+Step 6: Save the `.env` file. The server will restart and should successfully connect to the database!
