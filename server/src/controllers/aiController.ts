@@ -1,6 +1,7 @@
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiResponse } from '../utils/ApiResponse';
 import { ApiError } from '../utils/ApiError';
+import { dbService } from '../utils/dbService';
 
 export const aiController = {
   
@@ -163,5 +164,35 @@ export const aiController = {
    */
   downloadPdf: asyncHandler(async (req, res) => {
     return res.status(200).send('Simulated PDF Download File');
+  }),
+
+  /**
+   * Seed Mock Crime Data Endpoint (Option 2)
+   */
+  seedData: asyncHandler(async (req, res) => {
+    const app = dbService.getCatalystApp(req);
+    if (!app) {
+      throw new ApiError(500, "Catalyst app initialization failed.");
+    }
+    const table = app.datastore().table('Firs');
+    const uniqueId = Date.now();
+    const mockRow = {
+      CrimeNo: `CRIME-${uniqueId}`,
+      CaseNo: `CASE-${uniqueId}`,
+      CrimeRegisteredDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      BriefFacts: "Seeded mock crime entry for testing database insertion in AppSail.",
+      accused: JSON.stringify([{ name: "John Doe", role: "Accused" }]),
+      victim: JSON.stringify([{ name: "Jane Smith", role: "Victim" }]),
+      ipc_sections: JSON.stringify(["IPC 379", "IPC 411"]),
+      embedding: JSON.stringify([0.15, -0.42, 0.88, 0.03]),
+      status: "Investigation",
+      ps_name: "Central Police Station",
+      district: "Bengaluru"
+    };
+
+    console.log("Seeding row in Catalyst DB:", mockRow);
+    const insertResult = await table.insertRow(mockRow);
+    console.log("Seed success:", insertResult);
+    return res.status(200).json(new ApiResponse(200, insertResult, 'Data seeded successfully'));
   })
 };

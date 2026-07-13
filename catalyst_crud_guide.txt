@@ -1,0 +1,154 @@
+ZOHO CATALYST DATABASE CRUD OPERATIONS GUIDE (NODE.JS SDK)
+===========================================================
+
+This document provides ready-to-use Node.js (TypeScript/JavaScript) snippets for performing CRUD (Create, Read, Update, Delete) operations on the Zoho Catalyst Data Store for the "Firs" table.
+
+---
+
+1. INITIALIZING THE SDK
+=======================
+
+Always initialize the SDK first. 
+
+* Inside AppSail / route handlers (Recommended for production):
+--------------------------------------------------------------
+```typescript
+import catalyst from 'zcatalyst-sdk-node';
+
+app.post('/api/some-route', async (req, res) => {
+  // Pass the incoming request object 'req' to initialize automatically
+  const app = catalyst.initialize(req);
+  
+  // Use 'app' to query the database...
+});
+```
+
+* Inside standalone scripts (local testing with .env fallback):
+---------------------------------------------------------------
+```typescript
+import { dbService } from './utils/dbService';
+
+// This handles datacenter configurations and credentials automatically
+const app = dbService.getCatalystApp();
+```
+
+
+2. INSERT DATA (CREATE)
+======================
+
+To insert a new row, obtain the table object and pass the row data as a key-value object matching your columns.
+
+```typescript
+async function insertCrimeRecord(app: any) {
+  try {
+    const table = app.datastore().table('Firs');
+    
+    const newRecord = {
+      CrimeNo: "CRIME-2026-0001",
+      CaseNo: "CASE-40492",
+      CrimeRegisteredDate: "2026-07-13 18:00:00", // Format: YYYY-MM-DD HH:mm:ss
+      BriefFacts: "Theft reported at Central Bangalore apartment complex.",
+      accused: JSON.stringify([{ name: "Anoop Kumar", age: 34 }]),
+      victim: JSON.stringify([{ name: "Rajesh Hegde", age: 41 }]),
+      ipc_sections: JSON.stringify(["IPC 379"]),
+      embedding: JSON.stringify([0.12, -0.45, 0.88]),
+      status: "Investigation",
+      ps_name: "Central Police Station",
+      district: "Bengaluru"
+    };
+
+    const result = await table.insertRow(newRecord);
+    console.log("✅ Row inserted successfully! ROWID:", result.ROWID);
+    return result;
+  } catch (error) {
+    console.error("❌ Failed to insert row:", error);
+  }
+}
+```
+
+
+3. FETCH DATA (READ)
+====================
+
+There are two primary ways to retrieve data:
+
+* Option A: Get a single row by its ROWID
+------------------------------------------
+```typescript
+async function getRowById(app: any, rowId: string) {
+  try {
+    const table = app.datastore().table('Firs');
+    const result = await table.getRow(rowId);
+    console.log("✅ Row retrieved:", result);
+    return result;
+  } catch (error) {
+    console.error("❌ Failed to fetch row:", error);
+  }
+}
+```
+
+* Option B: Query using ZCQL (Zoho Catalyst Query Language)
+-----------------------------------------------------------
+```typescript
+async function queryInvestigatingCases(app: any) {
+  try {
+    const zcql = app.zcql();
+    const query = "SELECT * FROM Firs WHERE status = 'Investigation'";
+    const result = await zcql.executeZCQLQuery(query);
+    
+    // ZCQL wraps output rows in the table name key (e.g. Firs)
+    const records = result.map((row: any) => row.Firs);
+    console.log(`✅ Retrieved ${records.length} records:`, records);
+    return records;
+  } catch (error) {
+    console.error("❌ ZCQL Query failed:", error);
+  }
+}
+```
+
+
+4. UPDATE DATA (UPDATE)
+======================
+
+To update an existing row, you must include the unique `ROWID` inside the object you pass to `updateRow`. Only include columns you want to modify (other columns remain unchanged).
+
+```typescript
+async function updateCaseStatus(app: any, rowId: string, newStatus: string) {
+  try {
+    const table = app.datastore().table('Firs');
+    
+    const updatedData = {
+      ROWID: rowId, // REQUIRED to identify the row to update
+      status: newStatus,
+      BriefFacts: "Updated brief facts with latest investigation reports."
+    };
+
+    const result = await table.updateRow(updatedData);
+    console.log("✅ Row updated successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("❌ Failed to update row:", error);
+  }
+}
+```
+
+
+5. DELETE DATA (DELETE)
+======================
+
+To delete a row, obtain the table object and pass the `ROWID` of the target record to the `deleteRow` method.
+
+```typescript
+async function deleteCrimeRecord(app: any, rowId: string) {
+  try {
+    const table = app.datastore().table('Firs');
+    
+    // Delete target row using its ROWID
+    const result = await table.deleteRow(rowId);
+    console.log("✅ Row deleted successfully! Result:", result);
+    return result; // Returns true or confirmation status
+  } catch (error) {
+    console.error("❌ Failed to delete row:", error);
+  }
+}
+```

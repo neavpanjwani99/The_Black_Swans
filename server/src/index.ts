@@ -1,3 +1,5 @@
+import './prestart';
+// Triggering dev server reload after updating project key in .env
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
@@ -34,12 +36,12 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/ai', aiRouter);
 
-dbService.executeZQL("SELECT * FROM FIRS")
+dbService.getRows("Firs")
   .then(result => {
-    console.log("✅ Startup test query success:", result);
+    console.log("✅ Startup test query success (all rows from cloud):", result);
   })
   .catch(err => {
-    console.error("❌ Startup test query failed:", err.message || err);
+    console.error("❌ Startup test query failed:",  err);
   });
 
 // Register error handler

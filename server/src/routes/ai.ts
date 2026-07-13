@@ -18,3 +18,4 @@ aiRouter.post('/similarity', aiController.similarity);
 aiRouter.get('/graph', aiController.graph);
 aiRouter.post('/export-pdf', aiController.exportPdf);
 aiRouter.get('/download-pdf/:id', aiController.downloadPdf);
+aiRouter.post('/seed-data', aiController.seedData);
