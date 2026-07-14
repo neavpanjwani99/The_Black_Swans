@@ -148,7 +148,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ message, history })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -167,7 +169,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text, confidence })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -200,7 +204,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -217,7 +223,9 @@ export const api = {
       const res = await fetch(`${API_BASE_URL}/forecast`, {
         headers: getHeaders()
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -235,7 +243,9 @@ export const api = {
       const res = await fetch(`${API_BASE_URL}/anomaly`, {
         headers: getHeaders()
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -265,7 +275,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ text })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -294,7 +306,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ firDetails })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -311,7 +325,9 @@ export const api = {
       const res = await fetch(url, {
         headers: getHeaders()
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -333,7 +349,9 @@ export const api = {
         headers: getHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ chatId })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
     } catch (e) {
       console.warn('API call failed, returning mock data', e);
       return {
@@ -353,7 +371,9 @@ export const api = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ badgeNumber, accessPin })
       });
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      return json.data || json;
       */
 
       // Dynamic Mock logic simulating backend authentication check:
