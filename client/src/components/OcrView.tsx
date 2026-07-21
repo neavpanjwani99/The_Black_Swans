@@ -217,13 +217,21 @@ export function OcrView() {
       setOcrText(extractedText);
       setConfidence(tesseractConfidence);
       setOcrProgress(100);
+
+      // Auto-trigger AI analysis on uploaded file
+      setOcrStatusMsg('Analyzing document with AI...');
+      const [ocrRes, nerRes] = await Promise.all([
+        api.runOcr(extractedText, tesseractConfidence),
+        api.runNer(extractedText)
+      ]);
+      setOcrResult(ocrRes);
+      setNerResult(nerRes);
     } catch (err: any) {
       console.error('OCR Error:', err);
       setOcrError(err.message || 'An error occurred during OCR processing.');
     } finally {
       setOcrLoading(false);
       setOcrStatusMsg('');
-      // Reset file input so same file can be re-uploaded
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -335,6 +343,28 @@ export function OcrView() {
 
         {ocrResult && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Unrelated Document Warning Banner */}
+            {(ocrResult.warning || ocrResult.isRelevant === false) && (
+              <div style={{
+                background: 'rgba(239, 68, 68, 0.08)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                borderRadius: '10px',
+                padding: '14px 16px',
+                color: '#ef4444',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '12px'
+              }}>
+                <WarningIcon size={24} style={{ minWidth: '24px', marginTop: '2px' }} />
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#ef4444' }}>Unrelated Document Warning</h4>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', lineHeight: '1.5', opacity: 0.9 }}>
+                    {ocrResult.warning || "The uploaded document does not appear to be a valid FIR, Police Report, or Legal Crime Document."}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* OCR Metadata */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', background: 'rgba(255,255,255,0.5)', padding: '14px', borderRadius: '10px', border: '1px solid var(--card-border)' }}>
               <div>

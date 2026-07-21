@@ -90,8 +90,21 @@ export function ChatView({ setActiveTab }: ChatViewProps) {
     }, 4000);
   };
 
-  // Export Chat History to PDF via print window
-  const handleExportPDF = () => {
+  // Export Chat History to PDF via SmartBrowz / Print engine
+  const handleExportPDF = async () => {
+    try {
+      showToast('Generating SmartBrowz PDF Briefing...', 'info');
+      const res = await api.exportPdf(chatHistory);
+      if (res && res.downloadUrl && res.downloadUrl !== '#') {
+        window.open(res.downloadUrl, '_blank');
+        showToast('PDF Briefing generated successfully!', 'success');
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend SmartBrowz export failed, using local PDF generator', e);
+    }
+
+    // Client-side fallback PDF preview/print window
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
     printWindow.document.write(`
