@@ -1,0 +1,36 @@
+[debug] [2026-07-21T17:51:25.394Z] : 
+[debug] [2026-07-21T17:51:25.396Z] : ----------------------------------------------------------------------
+[debug] [2026-07-21T17:51:25.396Z] : Command:      C:\Program Files\nodejs\node.exe C:\Users\GAUTAM\AppData\Roaming\npm\node_modules\zcatalyst-cli\lib\bin\catalyst.js serve
+[debug] [2026-07-21T17:51:25.397Z] : CLI Version:  1.27.0
+[debug] [2026-07-21T17:51:25.397Z] : Platform:     win32
+[debug] [2026-07-21T17:51:25.397Z] : Node Version: v22.16.0
+[debug] [2026-07-21T17:51:25.397Z] : Time:         Tue Jul 21 2026 23:21:25 GMT+0530 (India Standard Time)
+[debug] [2026-07-21T17:51:25.397Z] : ----------------------------------------------------------------------
+[debug] [2026-07-21T17:51:25.397Z] : 
+[debug] [2026-07-21T17:51:31.287Z] : > authorizing via signed-in user option
+[debug] [2026-07-21T17:51:31.288Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.apigateway.apis.READ","ZohoCatalyst.apigateway.READ","ZohoCatalyst.segments.ALL","ZohoCatalyst.cache.READ","ZohoCatalyst.cache.CREATE","ZohoCatalyst.cache.DELETE","ZohoCatalyst.projects.ALL","ZohoCatalyst.cron.ALL","ZohoCatalyst.zcql.CREATE","ZohoCatalyst.projects.users.READ","ZohoCatalyst.projects.users.CREATE","ZohoCatalyst.projects.users.DELETE","ZohoCatalyst.projects.users.UPDATE","ZohoCatalyst.authentication.CREATE","ZohoCatalyst.email.CREATE","ZohoCatalyst.tables.ALL","ZohoCatalyst.tables.rows.ALL","ZohoCatalyst.tables.columns.ALL","ZohoCatalyst.tables.bulk.CREATE","ZohoCatalyst.tables.bulk.READ","ZohoCatalyst.folders.ALL","ZohoCatalyst.files.CREATE","ZohoCatalyst.files.READ","ZohoCatalyst.files.DELETE","ZohoCatalyst.functions.ALL","ZohoCatalyst.functions.EXECUTE","ZohoCatalyst.eventlistners.ALL","ZohoCatalyst.eventlisteners.produce","ZohoCatalyst.security.rules.Read","ZohoCatalyst.security.rules.Update","ZohoCatalyst.notifications.mobile","ZohoCatalyst.notifications.web","ZohoCatalyst.search.READ","ZohoCatalyst.mlkit.READ","QuickML.deployment.READ","ZohoCatalyst.pdfshot.execute","ZohoCatalyst.grid.READ","ZohoCatalyst.grid.terminate","ZohoCatalyst.circuits.execution.DELETE","ZohoCatalyst.circuits.execution.READ","ZohoCatalyst.circuits.execute","ZohoCatalyst.appsail.Read","ZohoCatalyst.jobpool.READ","ZohoCatalyst.job.ALL","ZohoCatalyst.nosql.READ","ZohoCatalyst.nosql.rows.ALL"]
+[debug] [2026-07-21T17:51:31.477Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/56039000000020001 
+
+[debug] [2026-07-21T17:51:31.692Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Tue, 21 Jul 2026 17:51:31 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2026-07-21T17:51:31.698Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/56039000000020001/environment 
+
+[debug] [2026-07-21T17:51:31.796Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Tue, 21 Jul 2026 17:51:32 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2026-07-21T17:51:32.187Z] : Build folder already exists, starting cleanup
+[debug] [2026-07-21T17:51:33.676Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/get-details 
+Query params: {"feature_name":"runtime"}
+
+[debug] [2026-07-21T17:51:33.808Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Tue, 21 Jul 2026 17:51:33 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2026-07-21T17:51:33.814Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/56039000000020001/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2026-07-21T17:51:33.923Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Tue, 21 Jul 2026 17:51:34 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2026-07-21T17:51:33.927Z] : unknown eol undefined hence skipping check
+[debug] [2026-07-21T17:51:33.941Z] : Node binary for stack node22 is at C:\Program Files\nodejs\node.exe

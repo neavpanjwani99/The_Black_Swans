@@ -4,5 +4,12 @@
   },
   "client": {
     "source": "client/dist"
+  },
+  "functions": {
+    "targets": [
+      "drishti_function"
+    ],
+    "ignore": [],
+    "source": "functions"
   }
 }

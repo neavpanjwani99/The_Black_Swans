@@ -1,26 +1,36 @@
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-  ? 'http://localhost:5000/api/ai' 
-  : '/api/ai';
+import axios from 'axios';
 
-const getHeaders = (extraHeaders: Record<string, string> = {}) => {
+// const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+//   ? 'https://drishti-60077066577.development.catalystserverless.in/server/drishti_function/api/ai' 
+//   : '/server/drishti_function/api/ai';
+
+const API_BASE_URL = "https://drishti-60077066577.development.catalystserverless.in/server/drishti_function/api/ai";
+
+// Create Axios Instance
+const apiInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+// Request interceptor to attach custom headers from sessionStorage
+apiInstance.interceptors.request.use((config) => {
   const saved = sessionStorage.getItem('drishti_user');
-  let authHeaders: Record<string, string> = {};
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      authHeaders = {
-        'x-user-role': parsed.role || '',
-        'x-badge-number': parsed.badgeNumber || ''
-      };
+      if (parsed.role) {
+        config.headers['x-user-role'] = parsed.role;
+      }
+      if (parsed.badgeNumber) {
+        config.headers['x-badge-number'] = parsed.badgeNumber;
+      }
     } catch (e) {
       // ignore
     }
   }
-  return {
-    ...authHeaders,
-    ...extraHeaders
-  };
-};
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 export interface ChatResponse {
   response: string;
@@ -146,13 +156,9 @@ export interface ExportPdfResponse {
 export const api = {
   async chat(message: string, history: Array<{ sender: 'user' | 'ai'; text: string }>): Promise<ChatResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/chat`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ message, history })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      console.log(`${API_BASE_URL}/chat`);
+      const res = await apiInstance.post<any>('/chat', { message, history });
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.response) {
         return payload;
@@ -172,13 +178,8 @@ export const api = {
 
   async runOcr(text: string, confidence: number): Promise<OcrResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/ocr`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ text, confidence })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.post<any>('/ocr', { text, confidence });
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.extractedFields) {
         return payload;
@@ -215,13 +216,8 @@ export const api = {
 
   async runNer(text: string): Promise<NerResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/ner`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ text })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.post<any>('/ner', { text });
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.entities) {
         return payload;
@@ -241,11 +237,8 @@ export const api = {
 
   async getForecast(): Promise<ForecastResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/forecast`, {
-        headers: getHeaders()
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.get<any>('/forecast');
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.predictions && payload.predictions.length > 0) {
         return payload;
@@ -266,18 +259,16 @@ export const api = {
 
   async getAnomaly(): Promise<AnomalyResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/anomaly`, {
-        headers: getHeaders()
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.get<any>('/anomaly');
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.alerts && payload.alerts.length > 0) {
         return payload;
       }
       throw new Error("No alerts returned from backend");
     } catch (e) {
-      console.warn('Backend API call failed, using static fallback for Anomaly', e);
+      // console.warn('Backend API call failed, using static fallback for Anomaly', e);
+      console.log(e)
       return {
         alerts: [
           {
@@ -300,13 +291,8 @@ export const api = {
 
   async scanDocument(text: string): Promise<DocumentResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/document`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ text })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.post<any>('/document', { text });
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.extractedFields) {
         return payload;
@@ -335,13 +321,8 @@ export const api = {
 
   async getSimilarity(firDetails: string): Promise<SimilarityResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/similarity`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ firDetails })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.post<any>('/similarity', { firDetails });
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.matches && payload.matches.length > 0) {
         return payload;
@@ -360,12 +341,10 @@ export const api = {
 
   async getGraph(query?: string): Promise<GraphResponse> {
     try {
-      const url = query ? `${API_BASE_URL}/graph?q=${encodeURIComponent(query)}` : `${API_BASE_URL}/graph`;
-      const res = await fetch(url, {
-        headers: getHeaders()
+      const res = await apiInstance.get<any>('/graph', {
+        params: query ? { q: query } : undefined
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const json = res.data;
       const payload = json.data || json;
       if (payload && payload.nodes && payload.nodes.length > 0) {
         return payload;
@@ -391,13 +370,8 @@ export const api = {
 
   async exportPdf(chatLog: any): Promise<ExportPdfResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/export-pdf`, {
-        method: 'POST',
-        headers: getHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ chatLog })
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const res = await apiInstance.post<any>('/export-pdf', { chatLog });
+      const json = res.data;
       return json.data || json;
     } catch (e) {
       console.warn('Backend PDF Export failed, returning local download URL', e);
@@ -412,17 +386,11 @@ export const api = {
   async login(badgeNumber: string, accessPin: string): Promise<{ success: boolean; message?: string; user?: { name: string; badgeNumber: string; role: string; station: string } }> {
     try {
       const authBase = API_BASE_URL.replace('/ai', '/auth');
-      const res = await fetch(`${authBase}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ badgeNumber, accessPin })
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const payload = json.data || json;
-        if (payload && payload.user) {
-          return { success: true, user: payload.user };
-        }
+      const res = await axios.post<any>(`${authBase}/login`, { badgeNumber, accessPin });
+      const json = res.data;
+      const payload = json.data || json;
+      if (payload && payload.user) {
+        return { success: true, user: payload.user };
       }
     } catch (e) {
       console.warn('Auth backend endpoint offline, using local credential matching fallback', e);

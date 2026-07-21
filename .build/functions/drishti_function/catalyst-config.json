@@ -1,0 +1,16 @@
+{
+	"deployment": {
+		"name": "drishti_function",
+		"stack": "node22",
+		"type": "advancedio",
+		"env_variables": {
+			"client_id": "1000.T21P2F8UQ5LG2AAEICYNCAR4ODK2CY",
+			"client_secret": "5d6e7ee21c4034847404954c2ec4560a55df67a450",
+			"refresh_token": "1000.16e7c22693ba2b84e9cc4c2fbf9fca66.95e549f3a9bd5c6883678d54547ae846",
+			"GROQ_API_KEY": "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"
+		}
+	},
+	"execution": {
+		"main": "index.js"
+	}
+}
